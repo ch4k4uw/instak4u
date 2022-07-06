@@ -1,0 +1,1 @@
+final emptyDate = DateTime.fromMicrosecondsSinceEpoch(0, isUtc: true);

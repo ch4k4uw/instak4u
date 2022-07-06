@@ -1,0 +1,1 @@
+export 'src/injectable.dart' show configurePresenterDependencies;

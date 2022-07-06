@@ -1,0 +1,43 @@
+name: instak4u
+description: Instagram feed prototype
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.18.0-44.0.dev <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core:
+    path: core
+  presenter:
+    path: presenter
+  provider: 6.0.3
+  injectable: ^1.5.3
+  get_it: ^7.2.0
+  transparent_image: ^2.0.0
+  cupertino_icons: 1.0.5
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
+  quiver: ^3.1.0
+  map_launcher: ^2.2.3
+  share_plus: 4.0.10
+  flutter_svg:
+  universal_html: ^2.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  injectable_generator:
+  build_runner:
+  flutter_lints: ^2.0.1
+flutter:
+
+  uses-material-design: true
+
+flutter_intl:
+  enabled: true

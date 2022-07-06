@@ -1,0 +1,10 @@
+{
+  "genericErrorTitle": "Unexpected error",
+  "genericErrorMessage": "An unexpected error has occurred.\nPlease try again later",
+  "genericErrorPositiveButton": "TRY AGAIN",
+  "genericErrorNegativeButton": "Cancel",
+  "connectivityErrorTitle": "Connectivity error",
+  "connectivityErrorMessage": "An unexpected error has occurred.\nPlease try again later",
+  "connectivityErrorPositiveButton": "TRY AGAIN",
+  "connectivityErrorNegativeButton": "Cancel"
+}
