@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:presenter/common/extensions/event_details_extensions.dart';
+import 'package:presenter/common.dart';
 
 import '../stuff/event_details_view_fixture.dart';
 

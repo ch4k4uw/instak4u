@@ -1,4 +1,4 @@
-import 'package:presenter/common/interaction/event_details_view.dart';
+import 'package:presenter/common.dart';
 
 class EventDetailsViewFixture {
   static const encodedEventDetails = "o3h4eNkqRmVpcmEgZGUgYWRvw6fDo28gZGUgYW5pb"

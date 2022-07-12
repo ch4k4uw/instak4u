@@ -100,6 +100,20 @@ class AppThemeData extends ThemeExtension<AppThemeData> with Diagnosticable {
         ),
         systemOverlayStyle?.hashCode ?? 0,
       );
+
+  AppThemeData copyWith({
+    AppColors? colors,
+    AppDimens? dimens,
+    AppTypography? typography,
+    SystemUiOverlayStyle? systemOverlayStyle,
+  }) {
+    return AppThemeData(
+      colors: colors ?? this.colors,
+      dimens: dimens ?? this.dimens,
+      typography: typography ?? this.typography,
+      systemOverlayStyle: systemOverlayStyle ?? this.systemOverlayStyle,
+    );
+  }
 }
 
 extension _SystemUiOverlayStyleToAppBarTheme on SystemUiOverlayStyle? {
