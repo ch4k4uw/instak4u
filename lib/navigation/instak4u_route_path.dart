@@ -5,9 +5,13 @@ abstract class Instak4uRoutePath {
   const Instak4uRoutePath();
 }
 
-class Instak4uRouteSignIn extends Instak4uRoutePath {}
+class Instak4uRouteSignIn extends Instak4uRoutePath {
+  const Instak4uRouteSignIn();
+}
 
-class Instak4uRouteSignUp extends Instak4uRoutePath {}
+class Instak4uRouteSignUp extends Instak4uRoutePath {
+  const Instak4uRouteSignUp();
+}
 
 class Instak4uRouteFeed extends Instak4uRoutePath {
   final UserView loggedUser;

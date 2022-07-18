@@ -80,6 +80,7 @@ class _SplashScreenScreenState extends State<SplashScreenScreen> {
       it.uiState.listen((event) {
         result.add(_SplashScreenStateStateChangeState(newState: event));
       });
+      return result;
     });
   }
 
@@ -93,6 +94,10 @@ class _SplashScreenScreenState extends State<SplashScreenScreen> {
         }
         if (state is SplashScreenStateEventDetailsSuccessfulLoaded) {
           widget.onShowEventDetails?.call(state.user, state.eventDetails);
+          return;
+        }
+        if (state == SplashScreenState.showSignInScreen) {
+          widget.onShowSignIn?.call();
           return;
         }
         if (state is SplashScreenStateNotInitialized) {
@@ -109,6 +114,7 @@ class _SplashScreenScreenState extends State<SplashScreenScreen> {
   void dispose() {
     super.dispose();
     _streamController?.close();
+    widget.viewModel?.close();
   }
 }
 

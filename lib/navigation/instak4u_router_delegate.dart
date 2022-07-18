@@ -1,5 +1,5 @@
+import 'package:core/common/extensions/object_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
 import 'package:instak4u/navigation/page/sign_in_page.dart';
 import 'package:instak4u/navigation/page/sign_up_page.dart';
@@ -32,8 +32,15 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
 
   Instak4uRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
+
+  @override
+  String toString() {
+    return 'Instak4uRouterDelegate{_isSignInRequired: $_isSignInRequired, _isSignUpRequired: $_isSignUpRequired, _loggedUser: $_loggedUser, _rawEventDetails: $_rawEventDetails, _eventDetailsView: $_eventDetailsView}';
+  }
+
   @override
   Instak4uRoutePath get currentConfiguration {
+    print("currConfig: $this");
     if (!_isLoggedIn && _isShowEventDetailsRedirection) {
       return Instak4uRouteRedirectToEventDetails(
         eventId: _rawEventDetails ?? "",
@@ -53,7 +60,10 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
         eventDetails: _eventDetailsView,
       );
     }
-    return Instak4uRouteSignIn();
+    if (_isSignUpRequired) {
+      return const Instak4uRouteSignUp();
+    }
+    return const Instak4uRouteSignIn();
   }
 
   @override
@@ -65,6 +75,7 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
           SplashScreenPage(
             eventDetailId: _rawEventDetails,
             onShowSignIn: () {
+              popRoute();
               _switchToSignInState();
               notifyListeners();
             },
@@ -94,7 +105,10 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
                 _switchToFeedState(user: user);
                 notifyListeners();
               },
-              onNavigateBack: () => SystemNavigator.pop(),
+              onNavigateBack: (context) {
+                _isSignUpRequired = false;
+                notifyListeners();
+              },
             )
         ]
       ],
@@ -105,14 +119,13 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
 
         if (_isSignUpRequired) {
           _isSignUpRequired = false;
-          notifyListeners();
         } else if (_isSignInRequired) {
           _isSignUpRequired = false;
-          notifyListeners();
         } else if(_isShowEventDetail) {
           _eventDetailsView = EventDetailsView.empty;
-          notifyListeners();
         }
+
+        notifyListeners();
 
         return true;
       },
@@ -124,7 +137,6 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
     _loggedUser = UserView.empty;
     _eventDetailsView = EventDetailsView.empty;
     _isSignInRequired = true;
-    _isSignUpRequired = false;
   }
 
   void _switchToFeedState({required UserView user}) {
@@ -146,6 +158,7 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
 
   @override
   Future<void> setNewRoutePath(Instak4uRoutePath configuration) async {
+    print("setNewRoute: $configuration");
     if (configuration is Instak4uRouteRedirect) {
       final isRedirectToEventDetails =
           configuration is Instak4uRouteRedirectToEventDetails;
@@ -172,5 +185,9 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
     }
 
     _switchToSignInState();
+
+    _isSignUpRequired = configuration is Instak4uRouteSignUp;
+
+    print("setNewRoute: $_isSignUpRequired");
   }
 }

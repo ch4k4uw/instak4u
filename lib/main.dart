@@ -6,6 +6,7 @@ import 'package:instak4u/navigation/instak4u_router_delegate.dart';
 import 'package:instak4u/sign_in/sign_in_screen.dart';
 import 'package:instak4u/sign_up/sign_up_screen.dart';
 import 'package:instak4u/splash/splash_screen_screen.dart';
+import 'package:instak4u/url_strategy.dart';
 import 'package:provider/provider.dart';
 import 'package:core/common/extensions/build_context_extensions.dart';
 import 'package:core/ui/component/app_modal_warning_bottom_sheet_content.dart';
@@ -19,6 +20,7 @@ import 'generated/l10n.dart';
 import 'injectable.dart';
 
 void main() {
+  usePathUrlStrategy();
   configureDependencies();
   runApp(
     AppTheme(

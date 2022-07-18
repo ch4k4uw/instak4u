@@ -145,6 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       it.uiState.listen((event) {
         result.add(_SignUpStateStateChangeState(newState: event));
       });
+      return result;
     });
   }
 
@@ -154,6 +155,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() => _screenState.handleState(state: event.newState));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _streamController?.close();
+    widget.viewModel?.close();
   }
 }
 

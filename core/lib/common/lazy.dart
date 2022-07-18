@@ -1,5 +1,3 @@
-export 'dart:js'
-if (dart.library.js) 'dart:js';
 class Lazy<T> {
   final T Function() _creator;
   late T _value;

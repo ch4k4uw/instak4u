@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:presenter/common.dart';
 import 'package:presenter/sign_up.dart';
@@ -8,7 +9,7 @@ import '../../sign_up/sign_up_screen.dart';
 class SignUpPage extends Page {
   final SignUpViewModel viewModel;
   final void Function(UserView)? onSignedIn;
-  final void Function()? onNavigateBack;
+  final void Function(BuildContext)? onNavigateBack;
 
   SignUpPage({
     this.onSignedIn,
@@ -24,6 +25,9 @@ class SignUpPage extends Page {
         return SignUpScreen(
           viewModel: viewModel,
           onSignedUp: onSignedIn,
+          onNavigateBack: () {
+            onNavigateBack?.call(context);
+          },
         );
       },
     );

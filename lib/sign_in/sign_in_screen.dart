@@ -52,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(height: theme.dimens.spacing.normal),
             _SignInScreenFormButtons(
               onSignIn: _handleOnSubmitted,
-              onNavigateToSignUp: () => {},
+              onNavigateToSignUp: _handleNavigateToSignUp,
             ),
           ],
         ),
@@ -66,6 +66,11 @@ class _SignInScreenState extends State<SignInScreen> {
       email: _screenState.email.text,
       password: _screenState.password.text,
     );
+  }
+
+  void _handleNavigateToSignUp() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    widget.onNavigateToSignUp?.call();
   }
 
   @override
@@ -90,6 +95,7 @@ class _SignInScreenState extends State<SignInScreen> {
       it.uiState.listen((event) {
         result.add(_SignInStateStateChangeState(newState: event));
       });
+      return result;
     });
   }
 
@@ -111,6 +117,13 @@ class _SignInScreenState extends State<SignInScreen> {
         setState(() => _screenState.handleState(state: event.newState));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _streamController?.close();
+    widget.viewModel?.close();
   }
 }
 
@@ -147,44 +160,45 @@ class _SignInScreenHeader extends StatelessWidget {
         ),
         Flexible(
           flex: SignInConstants.avatarContentPanelWeight,
-          child: LayoutBuilder(
-            builder: (_, c) {
-              print(c);
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(flex: 3, child: Container()),
-                      Expanded(
-                        flex: 4,
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: Icon(
-                            Icons.person,
-                            color: theme.colors.colorScheme.onSurface
-                                .withOpacity(.12),
-                          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 3,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Icon(
+                    Icons.person,
+                    color: theme.colors.colorScheme.onSurface.withOpacity(.12),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 7,
+                child: Column(
+                  children: [
+                    SizedBox(height: theme.dimens.spacing.xtiny),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: theme.dimens.spacing.xxnormal,
+                      ),
+                      child: AppHorizontalExpanded(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return FractionallySizedBox(
+                              widthFactor: (constraints.maxWidth.isLarge
+                                  ? constraints.maxWidth.largeFactor
+                                  : 1),
+                              child: Column(children: children),
+                            );
+                          },
                         ),
                       ),
-                      Expanded(flex: 3, child: Container()),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(height: theme.dimens.spacing.xtiny),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: theme.dimens.spacing.xxnormal,
-                        ),
-                        child: AppHorizontalExpanded(
-                          child: Column(children: children),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              );
-            },
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],

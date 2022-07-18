@@ -1,3 +1,4 @@
+import 'package:core/common/extensions/object_extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
@@ -20,12 +21,13 @@ class Instak4uRouteInformationParser
   Future<Instak4uRoutePath> parseRouteInformation(
     RouteInformation routeInformation,
   ) async {
+    print("parseInfo: ${routeInformation.location}");
     final uri = Uri.parse(routeInformation.location ?? "");
     var result = _assertEventDetailsPath(uri: uri);
     result ??= _assertFeedPath(uri: uri);
     result ??= _assertSignUpPath(uri: uri);
     result ??= _assertSignInPath(uri: uri);
-    return result ?? Instak4uRouteSignIn();
+    return result ?? _fallbackPath();
   }
 
   Instak4uRoutePath? _assertEventDetailsPath({required Uri uri}) {
@@ -132,7 +134,7 @@ class Instak4uRouteInformationParser
     if (!isThePath) {
       return null;
     }
-    return Instak4uRouteSignUp();
+    return const Instak4uRouteSignUp();
   }
 
   Instak4uRoutePath? _assertSignInPath({required Uri uri}) {
@@ -145,8 +147,10 @@ class Instak4uRouteInformationParser
     if (!isThePath) {
       return null;
     }
-    return Instak4uRouteSignIn();
+    return const Instak4uRouteSignIn();
   }
+
+  Instak4uRoutePath _fallbackPath() => const Instak4uRouteRedirectToFeed();
 
   @override
   RouteInformation restoreRouteInformation(Instak4uRoutePath configuration) {

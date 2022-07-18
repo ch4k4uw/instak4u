@@ -38,6 +38,7 @@ class AppTheme extends StatefulWidget {
 
 extension AppThemeDoubleEx on double {
   bool get isLarge => this > AppTheme.maxSmallScreenWidth;
+  double get largeFactor => AppTheme.maxSmallScreenWidth / this;
 }
 
 abstract class AppThemeController {
