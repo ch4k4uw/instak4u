@@ -117,7 +117,7 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
         if (_isSignUpRequired) {
           _isSignUpRequired = false;
         } else if (_isSignInRequired) {
-          _isSignUpRequired = false;
+          _isSignInRequired = false;
         } else if (_isShowEventDetail) {
           _eventDetailsView = EventDetailsView.empty;
         }

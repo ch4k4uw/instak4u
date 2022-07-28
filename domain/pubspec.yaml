@@ -1,10 +1,10 @@
-name: presenter
-description: Flutter presenter module
+name: domain
+description: Flutter domain module.
 version: 0.0.1
 publish_to: none
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: ">=2.17.0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
@@ -15,6 +15,8 @@ dependencies:
   injectable: ^1.5.3
   get_it: ^7.2.0
   messagepack: 0.2.1
+  cryptography: ^2.0.5
+  uuid: ^3.0.6
 
 dev_dependencies:
   flutter_test:
