@@ -1,6 +1,5 @@
-import 'package:core/common/extensions/build_context_extensions.dart';
-import 'package:core/common/extensions/double_extensions.dart';
-import 'package:core/ui/component/app_remote_image.dart';
+import 'package:core/common.dart';
+import 'package:core/ui.dart';
 import 'package:flutter/material.dart';
 
 class FeedScreenListItem extends StatelessWidget {
@@ -59,7 +58,10 @@ class FeedScreenListItem extends StatelessWidget {
             ],
           ),
         ),
-        Material(color: Colors.transparent,child: InkWell(onTap: onClick),)
+        Material(
+          color: Colors.transparent,
+          child: InkWell(onTap: onClick),
+        )
       ],
     );
   }

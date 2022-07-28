@@ -1,12 +1,7 @@
 import 'dart:async';
 
-import 'package:core/common/extensions/build_context_extensions.dart';
-import 'package:core/common/extensions/object_extensions.dart';
-import 'package:core/ui/app_theme.dart';
-import 'package:core/ui/component/app_content_loading_progress_bar.dart';
-import 'package:core/ui/component/app_horizontal_expanded.dart';
-import 'package:core/ui/component/app_material_background.dart';
-import 'package:core/ui/component/app_modal_warning_bottom_sheet_type.dart';
+import 'package:core/common.dart';
+import 'package:core/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:instak4u/common/extensions/build_context_extensions.dart';
 import 'package:instak4u/sign_in/sigin_in_constants.dart';

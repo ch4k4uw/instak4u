@@ -1,4 +1,3 @@
-import 'package:core/common/extensions/object_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
 import 'package:instak4u/navigation/page/sign_in_page.dart';
@@ -32,7 +31,6 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
 
   Instak4uRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
-
   @override
   String toString() {
     return 'Instak4uRouterDelegate{_isSignInRequired: $_isSignInRequired, _isSignUpRequired: $_isSignUpRequired, _loggedUser: $_loggedUser, _rawEventDetails: $_rawEventDetails, _eventDetailsView: $_eventDetailsView}';
@@ -40,7 +38,6 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
 
   @override
   Instak4uRoutePath get currentConfiguration {
-    print("currConfig: $this");
     if (!_isLoggedIn && _isShowEventDetailsRedirection) {
       return Instak4uRouteRedirectToEventDetails(
         eventId: _rawEventDetails ?? "",
@@ -121,7 +118,7 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
           _isSignUpRequired = false;
         } else if (_isSignInRequired) {
           _isSignUpRequired = false;
-        } else if(_isShowEventDetail) {
+        } else if (_isShowEventDetail) {
           _eventDetailsView = EventDetailsView.empty;
         }
 
@@ -158,7 +155,6 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
 
   @override
   Future<void> setNewRoutePath(Instak4uRoutePath configuration) async {
-    print("setNewRoute: $configuration");
     if (configuration is Instak4uRouteRedirect) {
       final isRedirectToEventDetails =
           configuration is Instak4uRouteRedirectToEventDetails;
@@ -187,7 +183,5 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
     _switchToSignInState();
 
     _isSignUpRequired = configuration is Instak4uRouteSignUp;
-
-    print("setNewRoute: $_isSignUpRequired");
   }
 }

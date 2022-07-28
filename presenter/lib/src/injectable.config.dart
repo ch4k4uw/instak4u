@@ -4,7 +4,7 @@
 // InjectableConfigGenerator
 // **************************************************************************
 
-import 'package:core/common/view_model/future_runner.dart' as _i4;
+import 'package:core/common.dart' as _i4;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 

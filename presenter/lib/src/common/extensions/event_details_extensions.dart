@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:core/common/extensions/object_extensions.dart';
+import 'package:core/common.dart';
 import 'package:messagepack/messagepack.dart';
 
 import '../interaction/event_details_view.dart';

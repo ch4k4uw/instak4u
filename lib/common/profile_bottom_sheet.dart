@@ -1,5 +1,5 @@
-import 'package:core/common/extensions/build_context_extensions.dart';
-import 'package:core/ui/component/app_horizontal_expanded.dart';
+import 'package:core/common.dart';
+import 'package:core/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:instak4u/common/extensions/build_context_extensions.dart';
 

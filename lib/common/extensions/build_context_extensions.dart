@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
-import 'package:core/generated/l10n.dart' as core_intl;
+import 'package:core/generated.dart' as core_intl;
 
 extension AppString on BuildContext {
   S get appString => S.of(this);

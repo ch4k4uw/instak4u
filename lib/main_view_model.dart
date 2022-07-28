@@ -1,5 +1,4 @@
-import 'package:core/common/view_model/app_view_model.dart';
-import 'package:core/common/view_model/future_runner.dart';
+import 'package:core/common.dart';
 
 abstract class MainUiState {}
 

@@ -1,4 +1,4 @@
-import 'package:core/common/extensions/build_context_extensions.dart';
+import 'package:core/common.dart';
 import 'package:flutter/material.dart';
 import 'package:instak4u/common/extensions/build_context_extensions.dart';
 import 'package:instak4u/common/profile_bottom_sheet.dart';
@@ -37,12 +37,11 @@ class FeedScreenContent extends StatelessWidget {
             title: Text(context.appString.appName),
             actions: [
               IconButton(
-                onPressed: () =>
-                    context.showProfileBottomSheet(
-                      name: userView.name,
-                      email: userView.email,
-                      onLogoutClick: () => onLogout?.call(),
-                    ),
+                onPressed: () => context.showProfileBottomSheet(
+                  name: userView.name,
+                  email: userView.email,
+                  onLogoutClick: () => onLogout?.call(),
+                ),
                 icon: const Icon(Icons.person),
               )
             ],
@@ -65,16 +64,15 @@ class FeedScreenContent extends StatelessWidget {
 
     final delegate = SliverChildBuilderDelegate(
       childCount: events.length,
-          (BuildContext context, int index) {
+      (BuildContext context, int index) {
         final event = events[index];
         return container(
-              () =>
-              FeedScreenListItem(
-                image: event.image,
-                title: event.title,
-                value: event.price,
-                onClick: () => onFindEventDetails?.call(event.id),
-              ),
+          () => FeedScreenListItem(
+            image: event.image,
+            title: event.title,
+            value: event.price,
+            onClick: () => onFindEventDetails?.call(event.id),
+          ),
         );
       },
     );

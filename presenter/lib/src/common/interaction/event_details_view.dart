@@ -1,4 +1,4 @@
-import 'package:core/common/constants.dart';
+import 'package:core/common.dart';
 
 class EventDetailsView {
   final String id;
@@ -27,7 +27,7 @@ class EventDetailsView {
 
   @override
   operator ==(Object? other) {
-    if(other is! EventDetailsView) {
+    if (other is! EventDetailsView) {
       return false;
     }
     var result = id == other.id;

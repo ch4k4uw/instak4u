@@ -1,4 +1,3 @@
-import 'package:core/common/extensions/object_extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
@@ -21,7 +20,6 @@ class Instak4uRouteInformationParser
   Future<Instak4uRoutePath> parseRouteInformation(
     RouteInformation routeInformation,
   ) async {
-    print("parseInfo: ${routeInformation.location}");
     final uri = Uri.parse(routeInformation.location ?? "");
     var result = _assertEventDetailsPath(uri: uri);
     result ??= _assertFeedPath(uri: uri);
@@ -32,7 +30,7 @@ class Instak4uRouteInformationParser
 
   Instak4uRoutePath? _assertEventDetailsPath({required Uri uri}) {
     const pathSegments = _eventDetailsNavigationPathSegments;
-    
+
     var isThePath = uri.pathSegments.isNotEmpty;
     isThePath = isThePath && uri.pathSegments.length >= 2;
     isThePath = isThePath && uri.pathSegments[0] == pathSegments[0];
@@ -59,7 +57,7 @@ class Instak4uRouteInformationParser
 
     const userArgName = _eventDetailsNavigationUserArgName;
     const eventArgName = _eventDetailsNavigationEventArgName;
-    
+
     final user = _decodeUser(data: uri.queryParameters[userArgName]!);
     final event = _decodeEventDetails(
       data: uri.queryParameters[eventArgName]!,
