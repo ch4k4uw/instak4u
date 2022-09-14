@@ -5,11 +5,13 @@ import 'dart:typed_data';
 
 import 'package:core/common.dart';
 import 'package:domain/src/credential/domain/entity/user.dart';
+import 'package:injectable/injectable.dart';
 import 'package:messagepack/messagepack.dart';
 import 'package:path_provider/path_provider.dart';
 
 const _storageName = "domain_settings";
 
+@singleton
 class UserStorage {
   static final storageMutex = Mutex();
   static bool mock = false;

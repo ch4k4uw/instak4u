@@ -18,4 +18,16 @@ class User {
 
   @override
   int get hashCode => id.hashCode ^ name.hashCode ^ email.hashCode;
+
+  User copyWith({
+    String? id,
+    String? name,
+    String? email,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+    );
+  }
 }

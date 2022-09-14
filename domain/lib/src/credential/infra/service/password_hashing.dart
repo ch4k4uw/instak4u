@@ -1,10 +1,12 @@
 import 'package:core/common.dart';
 import 'package:domain/src/credential/infra/extensions/messagepack_extensions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:messagepack/messagepack.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:uuid/uuid.dart';
 
+@singleton
 class PasswordHashing {
   static const _interactionCount = 0xff;
 

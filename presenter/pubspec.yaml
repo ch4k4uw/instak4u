@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   core:
     path: ../core
+  domain:
+    path: ../domain
   injectable: ^1.5.3
   get_it: ^7.2.0
   messagepack: 0.2.1

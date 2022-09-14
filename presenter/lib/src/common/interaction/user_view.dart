@@ -1,3 +1,5 @@
+import 'package:domain/credential.dart';
+
 class UserView {
   final String id;
   final String name;
@@ -8,7 +10,7 @@ class UserView {
   static const empty = UserView();
 
   @override
-  bool operator == (Object other) {
+  bool operator ==(Object other) {
     if (other is! UserView) {
       return false;
     }
@@ -22,4 +24,13 @@ class UserView {
   String toString() {
     return 'UserView{id: $id, name: $name, email: $email}';
   }
+}
+
+extension UserExtension on User {
+  UserView get asView =>
+      UserView(
+        id: id,
+        name: name,
+        email: email,
+      );
 }
