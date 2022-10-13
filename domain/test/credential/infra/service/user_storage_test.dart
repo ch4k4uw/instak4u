@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:domain/src/credential/infra/service/user_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
 import 'stuff/user_storage_fixture.dart';
 
 void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   final service = UserStorage();
   UserStorage.mock = true;
 

@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:core/common.dart';
 import 'package:domain/src/credential/domain/entity/user.dart';
+import 'package:domain/src/credential/infra/service/app_random_access_file.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:messagepack/messagepack.dart';
-import 'package:path_provider/path_provider.dart';
 
 const _storageName = "domain_settings";
 
@@ -196,36 +196,33 @@ class _LocalStorageLocal {
   }) async {
     final isUserRequired = key == "user";
 
-    var file = await _createFile(mock: mock);
+    final file = await _createFile(mock: mock);
     try {
-      final fileMetadata = await _fileTransaction<T>(
-        file: file,
-        transaction: (f) async {
-          final fileMetadata = await _readFileHeader(file: file);
-          final uDiskSize = fileMetadata.value.key.key;
-          final uSize = fileMetadata.value.key.value;
-          final usSize = fileMetadata.value.value;
+      final data = await file.lock(transaction: (f) async {
+        final fileMetadata = await _readFileHeader(file: f);
+        final uDiskSize = fileMetadata.key.key;
+        final uSize = fileMetadata.key.value;
+        final usSize = fileMetadata.value;
 
-          if ((isUserRequired && uSize == 0) ||
-              (!isUserRequired && usSize == 0)) {
-            return MapEntry(fileMetadata.key, defaultValue);
-          }
+        if ((isUserRequired && uSize == 0) ||
+            (!isUserRequired && usSize == 0)) {
+          return defaultValue;
+        }
 
-          final offset = 16 + (isUserRequired ? 0 : uDiskSize);
-          final size = isUserRequired ? uSize : usSize;
+        final offset = 16 + (isUserRequired ? 0 : uDiskSize);
+        final size = isUserRequired ? uSize : usSize;
 
-          final rawBuffer = Uint8List(size);
+        await f.setPosition(offset: offset);
 
-          file = await file.setPosition(offset);
-          await file.readInto(rawBuffer);
+        final unPacker = Unpacker(await f.read(bufferSize: size));
 
-          final unPacker = Unpacker(rawBuffer);
-
-          return MapEntry(fileMetadata.key, creator(unPacker));
-        },
-      );
-      file = fileMetadata.key;
-      return fileMetadata.value;
+        return creator(unPacker);
+      });
+      return data;
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
+      rethrow;
     } finally {
       await file.close();
     }
@@ -233,35 +230,24 @@ class _LocalStorageLocal {
 
   static Future<void> removeUser({bool mock = false}) async {
     var file = await _createFile(mock: mock);
-    final rawUserHeader = Uint8List(16);
 
     try {
-      final fileMetadata = await _fileTransaction(
-        file: file,
-        transaction: (f) async {
-          file = await f.setPosition(0);
-          await file.readInto(rawUserHeader);
-
-          final userHeader = ByteData.view(rawUserHeader.buffer);
-          userHeader.setInt32(4, 0);
-
-          await file.writeFrom(Uint8List.view(userHeader.buffer));
-
-          return MapEntry(file, null);
-        },
-      );
-      file = fileMetadata.key;
+      await file.lock(transaction: (f) async {
+        await f.setPosition(offset: 0);
+        final userHeader = await f.readByteData(bufferSize: 16);
+        userHeader.setUint32(4, 0);
+        await f.writeByteData(byteData: userHeader);
+      });
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
+      rethrow;
     } finally {
       await file.close();
     }
   }
 
-  static Future<String> get _localPath async {
-    final dir = await getApplicationDocumentsDirectory();
-    return dir.path;
-  }
-
-  static Future<RandomAccessFile> _createFile({bool mock = false}) async {
+  static Future<AppRandomAccessFile> _createFile({bool mock = false}) async {
     /**
      * File header:
      *  [32bits: User disk size, 32bits: User size]
@@ -271,42 +257,21 @@ class _LocalStorageLocal {
      *  [User data]
      *  [Users data]
      */
-    final path = await _localPath;
-    var file = File("$path/$_storageName${mock ? ".mock" : ""}");
-    final isFileExists = await file.exists();
-    if (!isFileExists) {
-      file.create();
-    }
-    return await (await file.open(mode: FileMode.append)).let((it) async {
-      var result = it;
-      if (!isFileExists) {
-        final resultMetadata = await _fileTransaction(
-          file: result,
-          transaction: (f) async {
-            return MapEntry(await _writeFileHeader(file: f), null);
-          },
-        );
-        result = resultMetadata.key;
+    var file = AppRandomAccessFile.create(
+      name: "$_storageName${mock ? ".mock" : ""}",
+    );
+    return await file.let((it) async {
+      if (!(await file.exists())) {
+        await file.lock(transaction: (f) async {
+          await _writeFileHeader(file: f);
+        });
       }
-      return result;
+      return it;
     });
   }
 
-  static Future<MapEntry<RandomAccessFile, T>> _fileTransaction<T>({
-    required RandomAccessFile file,
-    required Future<MapEntry<RandomAccessFile, T>> Function(RandomAccessFile)
-        transaction,
-  }) async {
-    var result = await file.lock();
-    try {
-      return await transaction(result);
-    } finally {
-      result = await result.unlock();
-    }
-  }
-
-  static Future<RandomAccessFile> _writeFileHeader({
-    required RandomAccessFile file,
+  static Future<void> _writeFileHeader({
+    required AppLockedRandomAccessFile file,
     int uDiskSize = 0,
     int uSize = 0,
     int usSize = 0,
@@ -315,34 +280,28 @@ class _LocalStorageLocal {
     final buffer = ByteData.view(rawBuffer.buffer);
     buffer.setUint32(0, uDiskSize);
     buffer.setUint32(4, uSize);
-    buffer.setUint64(8, usSize);
+    buffer.setUInt64Compat(8, usSize);
 
-    final result = await file.setPosition(0);
-    await result.writeFrom(Uint8List.view(buffer.buffer));
-
-    return result;
+    await file.setPosition(offset: 0);
+    await file.writeByteData(byteData: buffer);
   }
 
-  static Future<_FileHeaderResult> _readFileHeader({
-    required RandomAccessFile file,
+  static Future<MapEntry<MapEntry<int, int>, int>> _readFileHeader({
+    required AppLockedRandomAccessFile file,
   }) async {
-    var fileResult = await file.setPosition(0);
+    await file.setPosition(offset: 0);
     var uDiskSizeResult = 0;
     var uSizeResult = 0;
     var usSizeResult = 0;
 
-    final rawBuffer = Uint8List(16);
+    final buffer = await file.readByteData(bufferSize: 16);
 
-    await fileResult.readInto(rawBuffer);
-
-    final buffer = ByteData.view(rawBuffer.buffer);
-
-    uDiskSizeResult = buffer.getInt32(0);
-    uSizeResult = buffer.getInt32(4);
-    usSizeResult = buffer.getInt64(8);
+    uDiskSizeResult = buffer.getUint32(0);
+    uSizeResult = buffer.getUint32(4);
+    usSizeResult = buffer.getUInt64Compat(8);
 
     final uHeader = MapEntry(uDiskSizeResult, uSizeResult);
-    return _FileHeaderResult(fileResult, MapEntry(uHeader, usSizeResult));
+    return MapEntry(uHeader, usSizeResult);
   }
 
   static Future<_UsersLocal> decodeUsersLocal({bool mock = false}) async {
@@ -375,50 +334,44 @@ class _LocalStorageLocal {
     final rawUserBuffer = hasUser ? userPacker.takeBytes() : Uint8List(0);
     final rawUsersBuffer = hasUsers ? usersPacker.takeBytes() : Uint8List(0);
 
-    var file = await _createFile(mock: mock);
+    final file = await _createFile(mock: mock);
     try {
-      final transactionResult = await _fileTransaction(
-        file: file,
-        transaction: (f) async {
-          final fileMetadata = await _readFileHeader(file: f);
-          final uDiskSize = max(
-            rawUserBuffer.length,
-            fileMetadata.value.key.key,
-          );
-
-          var file = fileMetadata.key;
-
-          file = await _writeFileHeader(
-            file: file,
-            uDiskSize: uDiskSize,
-            uSize: rawUserBuffer.length,
-            usSize: rawUsersBuffer.length,
-          );
-          file = await file.writeFrom(rawUserBuffer);
-          file = await file.setPosition(16 + uDiskSize);
-          file = await file.writeFrom(rawUsersBuffer);
-          file = await file.truncate(16 + uDiskSize + rawUsersBuffer.length);
-          return MapEntry(file, null);
-        },
-      );
-      file = transactionResult.key;
+      await file.lock(transaction: (f) async {
+        final fileMetadata = await _readFileHeader(file: f);
+        final uDiskSize = max(
+          rawUserBuffer.length,
+          fileMetadata.key.key,
+        );
+        await _writeFileHeader(
+          file: f,
+          uDiskSize: uDiskSize,
+          uSize: rawUserBuffer.length,
+          usSize: rawUsersBuffer.length,
+        );
+        await f.write(buffer: Uint8List.view(rawUserBuffer.buffer));
+        await f.setPosition(offset: 16 + uDiskSize);
+        await f.write(buffer: Uint8List.view(rawUsersBuffer.buffer));
+        await f.truncate(length: 16 + uDiskSize + rawUsersBuffer.length);
+      });
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
+      rethrow;
     } finally {
       await file.close();
     }
   }
 
   static Future<void> removeData({bool mock = false}) async {
-    final path = await _localPath;
-    var file = File("$path/$_storageName${mock ? ".mock" : ""}");
+    var file = AppRandomAccessFile.create(
+      name: "$_storageName${mock ? ".mock" : ""}",
+    );
     final isFileExists = await file.exists();
     if (isFileExists) {
       await file.delete();
     }
   }
 }
-
-typedef _FileHeaderResult
-    = MapEntry<RandomAccessFile, MapEntry<MapEntry<int, int>, int>>;
 
 class _UsersLocal {
   List<_UserLocal> users;

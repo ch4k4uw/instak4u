@@ -1,10 +1,10 @@
-extension ObjectLet<T, R> on T {
-  R let(R Function(T it) creator) {
+extension ObjectLet<T> on T {
+  R let<R>(R Function(T it) creator) {
     return creator(this);
   }
 }
 
-extension ObjectAlso<T, R> on T {
+extension ObjectAlso<T> on T {
   T also(void Function(T it) action) {
     action(this);
     return this;

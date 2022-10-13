@@ -10,6 +10,9 @@ export 'src/common/extensions/double_extensions.dart'
 export 'src/common/extensions/object_extensions.dart'
     show ObjectAlso, ObjectLet, ObjectTakeIf;
 
+export 'src/common/extensions/byte_data_extensions.dart'
+    show ByteDataExtensions;
+
 export 'src/common/view_model/app_view_model.dart'
     show AppViewModel, AppBaseViewModel;
 
