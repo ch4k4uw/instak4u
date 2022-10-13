@@ -19,10 +19,8 @@ import 'generated/l10n.dart';
 import 'injectable.dart';
 
 void main() {
-  print("here1");
   usePathUrlStrategy();
   configureDependencies();
-  print("here2");
   runApp(
     AppTheme(
       home: Builder(
@@ -72,7 +70,6 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    print("here");
     return MaterialApp.router(
       title: 'Flutter Demo',
       routerDelegate: _delegate,
