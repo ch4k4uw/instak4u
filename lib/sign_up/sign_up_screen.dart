@@ -92,11 +92,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _handleOnSubmitted() {
-    widget.viewModel?.signUp(
-      name: _screenState.nameController.text,
-      email: _screenState.emailController.text,
-      password: _screenState.password1Controller.text,
-    );
+    final psw1 = _screenState.password1Controller.text;
+    final psw2 = _screenState.password2Controller.text;
+    if (psw1 == psw2) {
+      widget.viewModel?.signUp(
+        name: _screenState.nameController.text,
+        email: _screenState.emailController.text,
+        password: _screenState.password1Controller.text,
+      );
+    } else {
+      setState(() => _screenState.showPasswordMatchError = true);
+    }
   }
 
   @override

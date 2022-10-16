@@ -46,8 +46,9 @@ class SignUpViewModelImpl extends AppBaseViewModel<SignUpState>
           password: password,
         );
         send(SignUpStateUserSuccessfulSignedUp(user: user.asView));
-      } catch (e) {
+      } catch (e, s) {
         debugPrint(e.toString());
+        debugPrintStack(stackTrace: s);
         send(
           SignUpStateUserNotSignedUp(
             invalidName: e == appInvalidNameException,

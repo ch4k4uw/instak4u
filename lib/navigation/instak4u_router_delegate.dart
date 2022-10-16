@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
+import 'package:instak4u/navigation/page/feed_page.dart';
 import 'package:instak4u/navigation/page/sign_in_page.dart';
 import 'package:instak4u/navigation/page/sign_up_page.dart';
 import 'package:instak4u/navigation/page/splash_screen_page.dart';
@@ -108,6 +109,8 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
               },
             )
         ]
+        else if (_eventDetailsView == EventDetailsView.empty)
+          const FeedPage()
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
