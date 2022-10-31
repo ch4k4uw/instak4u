@@ -34,3 +34,7 @@ extension UserExtension on User {
         email: email,
       );
 }
+
+extension NullableUserExtension on UserView? {
+  UserView orEmpty() => this ?? const UserView();
+}

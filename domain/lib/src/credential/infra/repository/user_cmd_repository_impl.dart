@@ -13,7 +13,7 @@ import '../../domain/data/app_duplicated_user_exception.dart';
 import '../../domain/data/app_invalid_password_exception.dart';
 import 'user_cmd_repository_constants.dart';
 
-@singleton
+@Singleton(as: UserCmdRepository)
 class UserCmdRepositoryImpl implements UserCmdRepository {
   final UserStorage _userStorage;
   final PasswordHashing _passwordHashing;

@@ -11,16 +11,4 @@ import '../service/user_storage.dart';
 abstract class UserSingletonBindModule {
   @singleton
   UserRepository getUserRepository(UserCmdRepository repository) => repository;
-
-  @singleton
-  UserCmdRepository getUserCmdRepository({
-    required UserStorage userStorage,
-    required PasswordHashing passwordHashing,
-    required EmailValidator emailValidator,
-  }) =>
-      UserCmdRepositoryImpl(
-        userStorage: userStorage,
-        passwordHashing: passwordHashing,
-        emailValidator: emailValidator,
-      );
 }

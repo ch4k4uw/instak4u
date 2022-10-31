@@ -1,6 +1,6 @@
 import 'package:domain/credential.dart';
 import 'package:injectable/injectable.dart';
-import 'package:presenter/src/common/us/find_logged_user.dart';
+import 'package:presenter/src/common/uc/find_logged_user.dart';
 
 @Injectable(as: FindLoggedUser)
 class FindLoggedUserImpl implements FindLoggedUser {

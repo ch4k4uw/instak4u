@@ -13,6 +13,3 @@ export 'src/network/domain/data/app_http_not_found_exception.dart'
     show AppHttpNotFountException;
 
 export 'src/network/domain/data/http_constants.dart' show HttpConstants;
-
-export 'src/network/domain/service/http_client_factory.dart'
-    show HttpClientFactory;

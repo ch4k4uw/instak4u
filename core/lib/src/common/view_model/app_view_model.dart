@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
 import './future_runner.dart';
 
 abstract class AppViewModel<T> {
@@ -25,6 +27,18 @@ abstract class AppBaseViewModel<T> implements AppViewModel<T> {
 
   void runFuture(Future Function() action) {
     _futureRunner.runFuture(action);
+  }
+
+  void runFutureOrCatch(Future Function() action, Future Function() error) {
+    runFuture(() async {
+      try {
+        await action();
+      } catch (e, s) {
+        debugPrint(e.toString());
+        debugPrintStack(stackTrace: s);
+        await error();
+      }
+    });
   }
 
   void send(T state) {

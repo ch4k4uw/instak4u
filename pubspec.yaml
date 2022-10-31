@@ -15,7 +15,7 @@ dependencies:
     path: core
   presenter:
     path: presenter
-  provider: 6.0.3
+  provider: 6.0.4
   injectable: ^1.5.3
   get_it: ^7.2.0
   transparent_image: ^2.0.0
@@ -25,7 +25,7 @@ dependencies:
   intl: ^0.17.0
   quiver: ^3.1.0
   map_launcher: 2.4.0
-  share_plus: 4.4.0
+  share_plus: 6.0.1
   flutter_svg:
   universal_html: ^2.0.8
   flutter_web_plugins:

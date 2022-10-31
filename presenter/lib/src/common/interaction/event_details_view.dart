@@ -1,4 +1,5 @@
 import 'package:core/common.dart';
+import 'package:domain/feed.dart';
 
 class EventDetailsView {
   final String id;
@@ -42,7 +43,8 @@ class EventDetailsView {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode =>
+      Object.hash(
         id,
         title,
         description,
@@ -57,4 +59,18 @@ class EventDetailsView {
   String toString() {
     return 'EventDetailsView{id: $id, title: $title, description: $description, price: $price, date: $date, image: $image, latitude: $latitude, longitude: $longitude}';
   }
+}
+
+extension EventExtension on Event {
+  EventDetailsView get asEventDetailsView =>
+      EventDetailsView(
+        id: id,
+        title: title,
+        description: description,
+        price: price,
+        date: date,
+        image: image,
+        latitude: latitude,
+        longitude: longitude,
+      );
 }

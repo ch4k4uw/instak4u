@@ -35,19 +35,27 @@ class AppRemoteImage extends StatelessWidget {
         ),
         FadeInImage.memoryNetwork(
           placeholder: kTransparentImage,
+          placeholderErrorBuilder: (context, obj, stackTrace) {
+            _log(obj, stackTrace);
+            return Container();
+          },
           fit: BoxFit.cover,
           width: double.maxFinite,
           height: double.maxFinite,
           imageErrorBuilder: (context, obj, stackTrace) {
-            if (kDebugMode) {
-              print(obj);
-              print(stackTrace);
-            }
+            _log(obj, stackTrace);
             return imageError();
           },
-          image: url,
+          image: Uri.decodeFull(url),
         )
       ],
     );
+  }
+
+  void _log(Object obj, StackTrace? stackTrace) {
+    if (kDebugMode) {
+      //print(obj);
+      //print(stackTrace);
+    }
   }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
 import 'package:instak4u/navigation/page/feed_page.dart';
 import 'package:instak4u/navigation/page/sign_in_page.dart';
@@ -108,9 +110,23 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
                 notifyListeners();
               },
             )
+        ] else ...[
+          FeedPage(
+              userView: _loggedUser,
+              onShowEventDetails: (eventDetailsView) {
+                _eventDetailsView = eventDetailsView;
+                notifyListeners();
+              },
+              onLoggedOut: () {
+                _switchToSignInState();
+                notifyListeners();
+              },
+              onNavigateBack: () {
+                if (!kIsWeb) {
+                  SystemNavigator.pop(animated: true);
+                }
+              })
         ]
-        else if (_eventDetailsView == EventDetailsView.empty)
-          const FeedPage()
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {

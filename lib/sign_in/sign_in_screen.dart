@@ -125,11 +125,10 @@ class _SignInScreenState extends State<SignInScreen> {
 final _idle = Stream.value(_SignInStateState.idle);
 
 abstract class _SignInStateState {
-  static const _SignInStateState idle = _ConstStateState();
+  static _SignInStateState idle = _ConstStateState();
 }
 
 class _ConstStateState implements _SignInStateState {
-  const _ConstStateState();
 }
 
 class _SignInStateStateChangeState implements _SignInStateState {
