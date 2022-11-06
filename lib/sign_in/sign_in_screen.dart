@@ -128,8 +128,7 @@ abstract class _SignInStateState {
   static _SignInStateState idle = _ConstStateState();
 }
 
-class _ConstStateState implements _SignInStateState {
-}
+class _ConstStateState implements _SignInStateState {}
 
 class _SignInStateStateChangeState implements _SignInStateState {
   final SignInState newState;
@@ -163,7 +162,9 @@ class _SignInScreenHeader extends StatelessWidget {
                   fit: BoxFit.cover,
                   child: Icon(
                     Icons.person,
-                    color: theme.colors.colorScheme.onSurface.withOpacity(.12),
+                    color: theme.colors.colorScheme.onSurface.withOpacity(
+                      theme.doubles.defaultOpacity,
+                    ),
                   ),
                 ),
               ),

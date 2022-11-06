@@ -140,7 +140,9 @@ class _Body extends StatelessWidget {
 
     return AppHorizontalExpanded(
       child: Container(
-        color: theme.colors.colorScheme.onSurface.withOpacity(.12),
+        color: theme.colors.colorScheme.onSurface.withOpacity(
+            theme.doubles.defaultOpacity
+        ),
         child: Row(
           children: [
             SizedBox(width: dimens.spacing.normal),

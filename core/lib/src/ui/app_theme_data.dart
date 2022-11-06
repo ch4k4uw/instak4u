@@ -8,11 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiver/core.dart';
 
+import 'app_doubles.dart';
+
 class AppThemeData extends ThemeExtension<AppThemeData> with Diagnosticable {
   late ThemeData data;
   final AppColors colors;
   final AppDimens dimens;
   final AppTypography typography;
+  final AppDoubles doubles;
   final SystemUiOverlayStyle? systemOverlayStyle;
   bool _isBroadcasting = false;
 
@@ -20,6 +23,7 @@ class AppThemeData extends ThemeExtension<AppThemeData> with Diagnosticable {
     required this.colors,
     required this.dimens,
     required this.typography,
+    required this.doubles,
     this.systemOverlayStyle,
     BottomSheetThemeData? bottomSheetTheme,
   }) {
@@ -44,6 +48,7 @@ class AppThemeData extends ThemeExtension<AppThemeData> with Diagnosticable {
       colors: colors.lerp(other.colors, t),
       dimens: dimens.lerp(other.dimens, t),
       typography: other.typography,
+      doubles: doubles.lerp(other.doubles, t),
     );
   }
 
@@ -58,6 +63,8 @@ class AppThemeData extends ThemeExtension<AppThemeData> with Diagnosticable {
       DiagnosticsProperty<AppDimens>('dimens', dimens,
           level: DiagnosticLevel.debug),
       DiagnosticsProperty<AppTypography>('typography', typography,
+          level: DiagnosticLevel.debug),
+      DiagnosticsProperty<AppDoubles>('doubles', doubles,
           level: DiagnosticLevel.debug),
     ]);
   }
@@ -105,11 +112,13 @@ class AppThemeData extends ThemeExtension<AppThemeData> with Diagnosticable {
     AppColors? colors,
     AppDimens? dimens,
     AppTypography? typography,
+    AppDoubles? doubles,
     SystemUiOverlayStyle? systemOverlayStyle,
   }) {
     return AppThemeData(
       colors: colors ?? this.colors,
       dimens: dimens ?? this.dimens,
+      doubles: doubles ?? this.doubles,
       typography: typography ?? this.typography,
       systemOverlayStyle: systemOverlayStyle ?? this.systemOverlayStyle,
     );

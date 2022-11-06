@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:core/src/ui/numbers/doubles_constants.dart';
+
 import '../common/extensions/object_extensions.dart';
 import './app_colors.dart';
 import './color/color_constants.dart';
@@ -83,6 +85,7 @@ class _AppThemeState extends State<AppTheme> implements AppThemeController {
         final dimens = normalAppDimens.value;
         final typography = normalTypography.value;
         final colors = _brightness.colors;
+        final doubles = normalDoubles.value;
         final systemUiOverlayStyle =
             _systemUiOverlayStyle ?? _createSystemUiOverlayStyle();
         final isLarge = constraints.maxWidth.isLarge;
@@ -91,6 +94,7 @@ class _AppThemeState extends State<AppTheme> implements AppThemeController {
           colors: colors,
           dimens: dimens,
           typography: typography,
+          doubles: doubles,
           systemOverlayStyle: systemUiOverlayStyle,
           bottomSheetTheme: constraints.takeIf((it) => isLarge)?.let(
                 (it) => const BottomSheetThemeData(
