@@ -1,3 +1,4 @@
+import 'package:core/common.dart';
 import 'package:domain/credential.dart';
 
 class UserView {
@@ -28,11 +29,14 @@ class UserView {
 
 extension UserExtension on User {
   UserView get asView =>
-      UserView(
-        id: id,
-        name: name,
-        email: email,
-      );
+      takeIf((it) => it != User.empty)?.let(
+        (it) => UserView(
+          id: id,
+          name: name,
+          email: email,
+        ),
+      ) ??
+      UserView.empty;
 }
 
 extension NullableUserExtension on UserView? {

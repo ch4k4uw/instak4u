@@ -56,7 +56,9 @@ _i1.GetIt $initPresenterGetIt(_i1.GetIt get,
   gh.factoryParam<_i20.SplashScreenViewModel, _i21.SplashScreenViewModelParams,
           dynamic>(
       (params, _) => _i20.SplashScreenViewModelImpl(
-          params: params, futureRunner: get<_i18.FutureRunner>()));
+          futureRunner: get<_i18.FutureRunner>(),
+          params: params,
+          findLoggedUser: get<_i8.FindLoggedUser>()));
   gh.factory<_i22.FeedViewModel>(() => _i22.FeedViewModelImpl(
       futureRunner: get<_i18.FutureRunner>(),
       findAllEvents: get<_i3.FindAllEvents>(),

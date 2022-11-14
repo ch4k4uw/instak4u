@@ -46,3 +46,43 @@ class Instak4uRouteRedirectToEventDetails extends Instak4uRouteRedirect {
   const Instak4uRouteRedirectToEventDetails({required this.eventId})
       : super(to: Instak4uRouteRedirectTo.eventDetails);
 }
+
+extension Instak4uRoutePathExtension on Instak4uRoutePath {
+  bool get isFeedRoutePath => this is Instak4uRouteFeed;
+
+  bool get isEventDetailsRoutePath => this is Instak4uRouteEventDetails;
+
+  bool get isSignInRoutePath => this is Instak4uRouteSignIn;
+
+  bool get isSignUpRoutePath => this is Instak4uRouteSignUp;
+
+  Instak4uRoutePath onFeedRoutePath(
+    void Function(Instak4uRouteFeed path) block,
+  ) {
+    final route = this;
+    if (route is Instak4uRouteFeed) {
+      block(route);
+    }
+    return this;
+  }
+
+  Instak4uRoutePath onEventDetailsRoutePath(
+    void Function(Instak4uRouteEventDetails path) block,
+  ) {
+    final route = this;
+    if (route is Instak4uRouteEventDetails) {
+      block(route);
+    }
+    return this;
+  }
+}
+
+extension Instak4uRoutePathNullableExtension on Instak4uRoutePath? {
+  bool get isFeedRoutePath => this?.isFeedRoutePath == true;
+
+  bool get isEventDetailsRoutePath => this?.isEventDetailsRoutePath == true;
+
+  bool get isSignInRoutePath => this?.isSignInRoutePath == true;
+
+  bool get isSignUpRoutePath => this?.isSignUpRoutePath == true;
+}

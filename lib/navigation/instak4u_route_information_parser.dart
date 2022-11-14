@@ -1,3 +1,4 @@
+import 'package:core/common.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
@@ -19,13 +20,14 @@ class Instak4uRouteInformationParser
   @override
   Future<Instak4uRoutePath> parseRouteInformation(
     RouteInformation routeInformation,
-  ) async {
+  ) {
     final uri = Uri.parse(routeInformation.location ?? "");
     var result = _assertEventDetailsPath(uri: uri);
     result ??= _assertFeedPath(uri: uri);
     result ??= _assertSignUpPath(uri: uri);
     result ??= _assertSignInPath(uri: uri);
-    return result ?? _fallbackPath();
+    result ??= _fallbackPath();
+    return result.asSynchronousFuture;
   }
 
   Instak4uRoutePath? _assertEventDetailsPath({required Uri uri}) {

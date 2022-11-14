@@ -8,7 +8,13 @@ export 'src/common/extensions/double_extensions.dart'
     show brNumberFormat, LocalNumberFormat;
 
 export 'src/common/extensions/object_extensions.dart'
-    show ObjectAlso, ObjectLet, ObjectTakeIf, ObjectOrThrow, ObjectOrElse;
+    show
+        ObjectAlso,
+        ObjectLet,
+        ObjectTakeIf,
+        ObjectOrThrow,
+        ObjectOrElse,
+        ObjectSynchronousFuture;
 
 export 'src/common/extensions/byte_data_extensions.dart'
     show ByteDataExtensions;

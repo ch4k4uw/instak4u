@@ -1,3 +1,4 @@
+import 'package:core/common.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,133 +14,118 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
   @override
   final GlobalKey<NavigatorState>? navigatorKey;
 
-  bool _isSignInRequired = false;
-
-  bool _isSignUpRequired = false;
-
-  UserView _loggedUser = UserView.empty;
-
-  bool get _isLoggedIn => _loggedUser != UserView.empty;
-
-  String? _rawEventDetails;
-
-  bool get _isShowEventDetailsRedirection => _rawEventDetails != null;
-
-  EventDetailsView _eventDetailsView = EventDetailsView.empty;
-
-  bool get _isShowEventDetail => _eventDetailsView != EventDetailsView.empty;
-
-  bool get _isShowFeedRedirection =>
-      !_isLoggedIn && !_isShowEventDetailsRedirection && !_isSignInRequired;
-
   Instak4uRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
   @override
-  String toString() {
-    return 'Instak4uRouterDelegate{_isSignInRequired: $_isSignInRequired, _isSignUpRequired: $_isSignUpRequired, _loggedUser: $_loggedUser, _rawEventDetails: $_rawEventDetails, _eventDetailsView: $_eventDetailsView}';
+  Instak4uRoutePath? get currentConfiguration {
+    final isFeedRoute = _currentConfiguration.isFeedRoutePath;
+    final isEventDetailsRoute = _currentConfiguration.isEventDetailsRoutePath;
+    final isSignIn = _currentConfiguration.isSignInRoutePath;
+    final isSignUp = _currentConfiguration.isSignUpRoutePath;
+    if (isFeedRoute || isEventDetailsRoute || isSignIn || isSignUp) {
+      return _currentConfiguration;
+    }
+    return null;
   }
 
-  @override
-  Instak4uRoutePath get currentConfiguration {
-    if (!_isLoggedIn && _isShowEventDetailsRedirection) {
-      return Instak4uRouteRedirectToEventDetails(
-        eventId: _rawEventDetails ?? "",
-      );
-    }
-    if (!_isLoggedIn && !_isShowEventDetailsRedirection) {
-      if (!_isSignInRequired) {
-        return const Instak4uRouteRedirectToFeed();
-      }
-    }
-    if (_isLoggedIn) {
-      if (!_isShowEventDetail) {
-        return Instak4uRouteFeed(loggedUser: _loggedUser);
-      }
-      return Instak4uRouteEventDetails(
-        loggedUser: _loggedUser,
-        eventDetails: _eventDetailsView,
-      );
-    }
-    if (_isSignUpRequired) {
-      return const Instak4uRouteSignUp();
-    }
-    return const Instak4uRouteSignIn();
-  }
+  Instak4uRoutePath? _currentConfiguration;
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
       pages: [
-        if (_isShowFeedRedirection || _isShowEventDetailsRedirection)
-          SplashScreenPage(
-            eventDetailId: _rawEventDetails,
-            onShowSignIn: () {
-              popRoute();
-              _switchToSignInState();
-              notifyListeners();
-            },
-            onShowFeed: (user) {
-              _switchToFeedState(user: user);
-              notifyListeners();
-            },
-            onShowEventDetails: (user, event) {
-              _switchToEventDetailsState(user: user, event: event);
-              notifyListeners();
-            },
-          )
-        else if (_isSignInRequired) ...[
-          SignInPage(
-            onSignedIn: (user) {
-              _switchToFeedState(user: user);
-              notifyListeners();
-            },
-            onNavigateToSignUp: () {
-              _isSignUpRequired = true;
-              notifyListeners();
-            },
-          ),
-          if (_isSignUpRequired)
-            SignUpPage(
-              onSignedIn: (user) {
-                _switchToFeedState(user: user);
-                notifyListeners();
-              },
-              onNavigateBack: (context) {
-                _isSignUpRequired = false;
-                notifyListeners();
-              },
-            )
-        ] else ...[
-          FeedPage(
-              userView: _loggedUser,
-              onShowEventDetails: (eventDetailsView) {
-                _eventDetailsView = eventDetailsView;
-                notifyListeners();
-              },
-              onLoggedOut: () {
-                _switchToSignInState();
-                notifyListeners();
-              },
-              onNavigateBack: () {
-                if (!kIsWeb) {
-                  SystemNavigator.pop(animated: true);
-                }
-              })
-        ]
+        ..._currentConfiguration.onSplash((detailId) => [
+              SplashScreenPage(
+                eventDetailId: detailId,
+                onShowSignIn: () {
+                  _replacePath(
+                    context: context,
+                    newPath: const Instak4uRouteSignIn(),
+                  );
+                },
+                onShowFeed: (user) {
+                  _replacePath(
+                    context: context,
+                    newPath: Instak4uRouteFeed(loggedUser: user),
+                  );
+                },
+                onShowEventDetails: (user, event) {
+                  _replacePath(
+                    context: context,
+                    newPath: Instak4uRouteEventDetails(
+                      loggedUser: user,
+                      eventDetails: event,
+                    ),
+                  );
+                },
+              )
+            ]),
+        ..._currentConfiguration.onSign((isSignUp) => [
+              SignInPage(
+                onSignedIn: (user) {
+                  _replacePath(
+                    context: context,
+                    newPath: Instak4uRouteFeed(loggedUser: user),
+                  );
+                },
+                onNavigateToSignUp: () {
+                  _addPath(
+                    context: context,
+                    newPath: const Instak4uRouteSignUp(),
+                  );
+                },
+              ),
+              if (isSignUp)
+                SignUpPage(
+                  onSignedIn: (user) {
+                    _replacePath(
+                      context: context,
+                      newPath: Instak4uRouteFeed(loggedUser: user),
+                    );
+                  },
+                  onNavigateBack: (context) {
+                    Navigator.pop(context);
+                  },
+                )
+            ]),
+        ..._currentConfiguration.onFeed((userView) => [
+              FeedPage(
+                  userView: userView,
+                  onShowEventDetails: (eventDetailsView) {
+                    _addPath(
+                      context: context,
+                      newPath: Instak4uRouteEventDetails(
+                        loggedUser: userView,
+                        eventDetails: eventDetailsView,
+                      ),
+                    );
+                  },
+                  onLoggedOut: () {
+                    _replacePath(
+                      context: context,
+                      newPath: const Instak4uRouteSignIn(),
+                    );
+                  },
+                  onNavigateBack: () {
+                    if (!kIsWeb) {
+                      SystemNavigator.pop(animated: true);
+                    }
+                  })
+            ]),
+        ..._currentConfiguration.onEventDetail((userView, details) => []),
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
         }
 
-        if (_isSignUpRequired) {
-          _isSignUpRequired = false;
-        } else if (_isSignInRequired) {
-          _isSignInRequired = false;
-        } else if (_isShowEventDetail) {
-          _eventDetailsView = EventDetailsView.empty;
-        }
+        _currentConfiguration = _currentConfiguration?.let((it) {
+          if (it is Instak4uRouteEventDetails) {
+            return Instak4uRouteFeed(loggedUser: it.loggedUser);
+          }
+          return const Instak4uRouteSignIn();
+        });
 
         notifyListeners();
 
@@ -148,59 +134,91 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
     );
   }
 
-  void _switchToSignInState() {
-    _rawEventDetails = null;
-    _loggedUser = UserView.empty;
-    _eventDetailsView = EventDetailsView.empty;
-    _isSignInRequired = true;
-  }
-
-  void _switchToFeedState({required UserView user}) {
-    _rawEventDetails = null;
-    _loggedUser = user;
-    _eventDetailsView = EventDetailsView.empty;
-    _isSignInRequired = false;
-  }
-
-  void _switchToEventDetailsState({
-    required UserView user,
-    required EventDetailsView event,
+  void _replacePath({
+    required BuildContext context,
+    required Instak4uRoutePath newPath,
   }) {
-    _rawEventDetails = null;
-    _loggedUser = user;
-    _eventDetailsView = event;
-    _isSignInRequired = false;
+    Router.neglect(context, () {
+      _currentConfiguration = newPath;
+      notifyListeners();
+    });
+  }
+
+  void _addPath({
+    required BuildContext context,
+    required Instak4uRoutePath newPath,
+  }) {
+    _currentConfiguration = newPath;
+    notifyListeners();
   }
 
   @override
   Future<void> setNewRoutePath(Instak4uRoutePath configuration) async {
-    if (configuration is Instak4uRouteRedirect) {
-      final isRedirectToEventDetails =
-          configuration is Instak4uRouteRedirectToEventDetails;
+    if (_currentConfiguration == null) {
+      configuration.onFeedRoutePath((path) {
+        _currentConfiguration = const Instak4uRouteRedirectToFeed();
+      }).onEventDetailsRoutePath((path) {
+        _currentConfiguration = Instak4uRouteRedirectToEventDetails(
+          eventId: path.eventDetails.id,
+        );
+      });
+      final isNewRouteDisabled = configuration.isFeedRoutePath ||
+          configuration.isEventDetailsRoutePath;
+      if (isNewRouteDisabled) {
+        return;
+      }
+    }
+    if (_currentConfiguration.isSignInRoutePath) {
+      if (configuration.isFeedRoutePath ||
+          configuration.isEventDetailsRoutePath) {
+        return;
+      }
+    }
+    _currentConfiguration = configuration;
+  }
+}
 
-      _rawEventDetails =
-          isRedirectToEventDetails ? configuration.eventId : null;
-      _loggedUser = UserView.empty;
-      _eventDetailsView = EventDetailsView.empty;
-      _isSignInRequired = false;
-      return;
+extension _Instak4uRoutePathExtension on Instak4uRoutePath? {
+  List<Page> onSplash(List<Page> Function(String? detailId) block) {
+    final detailId = this
+        ?.takeIf((it) => it is Instak4uRouteRedirectToEventDetails)
+        ?.let((it) => it as Instak4uRouteRedirectToEventDetails?)
+        ?.let((it) => it.eventId);
+
+    if (this == null || (this is! Instak4uRouteRedirect)) {
+      return [];
+    }
+    return block(detailId);
+  }
+
+  List<Page> onSign(List<Page> Function(bool isSignUp) block) {
+    if (this == null) {
+      return block(false);
     }
 
-    if (configuration is Instak4uRouteFeed) {
-      _switchToFeedState(user: configuration.loggedUser);
-      return;
-    }
+    final isSignIn = this is Instak4uRouteSignIn;
+    final isSignUp = this is Instak4uRouteSignUp;
 
-    if (configuration is Instak4uRouteEventDetails) {
-      _rawEventDetails = null;
-      _loggedUser = configuration.loggedUser;
-      _eventDetailsView = configuration.eventDetails;
-      _isSignInRequired = false;
-      return;
-    }
+    return this
+            ?.takeIf((_) => isSignIn || isSignUp)
+            ?.let((_) => block(isSignUp)) ??
+        [];
+  }
 
-    _switchToSignInState();
+  List<Page> onFeed(List<Page> Function(UserView userView) block) {
+    return this
+            ?.takeIf((it) => it is Instak4uRouteFeed)
+            ?.let((it) => it as Instak4uRouteFeed)
+            .let((it) => block(it.loggedUser)) ??
+        [];
+  }
 
-    _isSignUpRequired = configuration is Instak4uRouteSignUp;
+  List<Page> onEventDetail(
+      List<Page> Function(UserView userView, EventDetailsView details) block) {
+    return this
+            ?.takeIf((it) => it is Instak4uRouteEventDetails)
+            ?.let((it) => it as Instak4uRouteEventDetails)
+            .let((it) => block(it.loggedUser, it.eventDetails)) ??
+        [];
   }
 }

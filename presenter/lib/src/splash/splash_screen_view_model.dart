@@ -2,14 +2,17 @@ import 'package:core/common.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:presenter/common.dart';
+import 'package:presenter/src/common/interaction/user_view.dart';
+import '../common/uc/find_logged_user.dart';
 import 'package:presenter/src/splash/splash_screen_view_model_params.dart';
 
 import 'interaction/splash_screen_state.dart';
 
 abstract class SplashScreenViewModel extends AppViewModel<SplashScreenState> {
   factory SplashScreenViewModel({
-    required SplashScreenViewModelParams params,
     FutureRunner? futureRunner,
+    required SplashScreenViewModelParams params,
+    required FindLoggedUser findLoggedUser,
   }) = SplashScreenViewModelImpl;
 }
 
@@ -17,11 +20,14 @@ abstract class SplashScreenViewModel extends AppViewModel<SplashScreenState> {
 class SplashScreenViewModelImpl extends AppBaseViewModel<SplashScreenState>
     implements SplashScreenViewModel {
   final SplashScreenViewModelParams params;
+  final FindLoggedUser _findLoggedUser;
 
   SplashScreenViewModelImpl({
-    @factoryParam required this.params,
     FutureRunner? futureRunner,
-  }) : super(futureRunner: futureRunner) {
+    @factoryParam required this.params,
+    required FindLoggedUser findLoggedUser,
+  })  : _findLoggedUser = findLoggedUser,
+        super(futureRunner: futureRunner) {
     runFuture(() async {
       send(await _init());
     });
@@ -29,7 +35,7 @@ class SplashScreenViewModelImpl extends AppBaseViewModel<SplashScreenState>
 
   Future<SplashScreenState> _init() async {
     try {
-      final user = await _findLoggedUser();
+      final user = (await _findLoggedUser()).asView;
       if (user != UserView.empty) {
         final eventDetailId = params.eventDetailId;
         if (eventDetailId != null) {
@@ -59,10 +65,6 @@ class SplashScreenViewModelImpl extends AppBaseViewModel<SplashScreenState>
       }
       return SplashScreenStateNotInitialized(cause: e);
     }
-  }
-
-  Future<UserView> _findLoggedUser() async {
-    return UserView.empty;
   }
 
   Future<EventDetailsView> _findDetails({
