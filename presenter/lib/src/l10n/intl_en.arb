@@ -1,0 +1,25 @@
+{
+  "deepLinkHttpsScheme": "https",
+  "deepLinkAuthority": "social.app",
+  "deepLinkMerchant": "instak4u",
+  "eventSharing": "*{title}*\n\n{description}\n\n\nLocation: {latitude}, {longitude}\nSee more: {url}",
+  "@eventSharing": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      },
+      "latitude": {
+        "type": "double"
+      },
+      "longitude": {
+        "type": "double"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  }
+}
