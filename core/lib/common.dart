@@ -25,5 +25,6 @@ export 'src/common/view_model/app_view_model.dart'
 export 'src/common/view_model/future_runner.dart' show FutureRunner;
 
 export 'src/common/lazy.dart' show Lazy;
+export 'src/common/provider.dart' show Provider;
 
 export 'src/common/constants.dart' show emptyDate;

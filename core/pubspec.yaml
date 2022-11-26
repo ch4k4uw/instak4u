@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.4
-  injectable: ^1.5.3
+  injectable: ^1.5.4
   http_interceptor: ^1.0.2
   http: ^0.13.5
   get_it: ^7.2.0

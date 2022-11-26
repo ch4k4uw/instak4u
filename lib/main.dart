@@ -1,4 +1,6 @@
 import 'package:core/intl.dart' as core_intl;
+import 'package:get_it/get_it.dart';
+import 'package:presenter/intl.dart' as presenter_intl;
 import 'package:core/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -11,11 +13,14 @@ import 'injectable.dart';
 
 void main() {
   usePathUrlStrategy();
-  configureDependencies();
   runApp(
     AppTheme(
       home: Builder(
-        builder: (_) => const App(),
+        builder: (context) {
+          configureDependencies(context: context);
+          configureDependencies(context: context);
+          return const App();
+        },
       ),
     ),
   );
@@ -32,6 +37,7 @@ class _AppState extends State<App> {
   final Instak4uRouterDelegate _delegate = Instak4uRouterDelegate();
   final Instak4uRouteInformationParser _parser =
       Instak4uRouteInformationParser();
+  BuildContext? _lastContext;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +48,7 @@ class _AppState extends State<App> {
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         S.delegate,
+        presenter_intl.S.delegate,
         core_intl.S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

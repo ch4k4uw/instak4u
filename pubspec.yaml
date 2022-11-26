@@ -16,7 +16,7 @@ dependencies:
   presenter:
     path: presenter
   provider: 6.0.4
-  injectable: ^1.5.3
+  injectable: ^1.5.4
   get_it: ^7.2.0
   transparent_image: ^2.0.0
   cupertino_icons: 1.0.5
@@ -30,7 +30,7 @@ dependencies:
   universal_html: ^2.0.8
   flutter_web_plugins:
     sdk: flutter
-  uuid: 3.0.6
+  uuid: 3.0.7
 
 dev_dependencies:
   flutter_test:

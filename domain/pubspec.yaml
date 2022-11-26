@@ -12,11 +12,11 @@ dependencies:
     sdk: flutter
   core:
     path: ../core
-  injectable: ^1.5.3
+  injectable: ^1.5.4
   get_it: ^7.2.0
   messagepack: 0.2.1
   cryptography: ^2.0.5
-  uuid: ^3.0.6
+  uuid: ^3.0.7
   path_provider: ^2.0.11
   http: ^0.13.5
 
