@@ -1,13 +1,17 @@
 import 'package:core/common.dart';
+import 'package:core/injectable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
 import 'package:instak4u/navigation/page/feed_page.dart';
 import 'package:instak4u/navigation/page/sign_in_page.dart';
 import 'package:instak4u/navigation/page/sign_up_page.dart';
 import 'package:instak4u/navigation/page/splash_screen_page.dart';
 import 'package:presenter/common.dart';
+
+import 'page/event_details_page.dart';
 
 class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<Instak4uRoutePath> {
@@ -51,6 +55,7 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
                   );
                 },
                 onShowEventDetails: (user, event) {
+                  print("\n\n\nokokok\n\n\n");
                   _replacePath(
                     context: context,
                     newPath: Instak4uRouteEventDetails(
@@ -89,31 +94,17 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
                   },
                 )
             ]),
-        ..._currentConfiguration.onFeed((userView) => [
-              FeedPage(
-                  userView: userView,
-                  onShowEventDetails: (eventDetailsView) {
-                    _addPath(
-                      context: context,
-                      newPath: Instak4uRouteEventDetails(
-                        loggedUser: userView,
-                        eventDetails: eventDetailsView,
-                      ),
-                    );
-                  },
-                  onLoggedOut: () {
-                    _replacePath(
-                      context: context,
-                      newPath: const Instak4uRouteSignIn(),
-                    );
-                  },
-                  onNavigateBack: () {
-                    if (!kIsWeb) {
-                      SystemNavigator.pop(animated: true);
-                    }
-                  })
-            ]),
-        ..._currentConfiguration.onEventDetail((userView, details) => []),
+        ..._currentConfiguration.onFeed((userView) => _feedStack(
+              context: context,
+              user: userView,
+            )),
+        ..._currentConfiguration.onEventDetail(
+          (userView, details) => _eventDetailsStack(
+            context: context,
+            event: details,
+            user: userView,
+          ),
+        ),
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
@@ -152,6 +143,77 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
     notifyListeners();
   }
 
+  List<Page<dynamic>> _feedStack({
+    required BuildContext context,
+    required UserView user,
+  }) {
+    return [
+      FeedPage(
+        userView: user,
+        onShowEventDetails: (eventDetailsView) {
+          _addPath(
+            context: context,
+            newPath: Instak4uRouteEventDetails(
+              loggedUser: user,
+              eventDetails: eventDetailsView,
+            ),
+          );
+        },
+        onLoggedOut: () {
+          _replacePath(
+            context: context,
+            newPath: const Instak4uRouteSignIn(),
+          );
+        },
+        onNavigateBack: () {
+          if (!kIsWeb) {
+            SystemNavigator.pop(animated: true);
+          }
+        },
+      )
+    ];
+  }
+
+  List<Page<dynamic>> _eventDetailsStack({
+    required BuildContext context,
+    required EventDetailsView event,
+    required UserView user,
+  }) {
+    _registerBuilder(scope: "details", context: context);
+    return [
+      ..._feedStack(context: context, user: user),
+      EventDetailsPage(
+        eventDetailsView: event,
+        userView: user,
+        onLoggedOut: () {
+          _replacePath(
+            context: context,
+            newPath: const Instak4uRouteSignIn(),
+          );
+        },
+        onNavigateBack: () {
+          _addPath(
+            context: context,
+            newPath: Instak4uRouteFeed(
+              loggedUser: user,
+            ),
+          );
+        },
+      )
+    ];
+  }
+
+  void _registerBuilder({
+    required String scope,
+    required BuildContext context,
+  }) {
+    if (GetIt.I.currentScopeName == scope) {
+      return;
+    }
+    GetIt.I.pushNewScope(scopeName: scope);
+    injectBuildContext(context: context);
+  }
+
   @override
   Future<void> setNewRoutePath(Instak4uRoutePath configuration) async {
     if (_currentConfiguration == null) {
@@ -175,6 +237,16 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
       }
     }
     _currentConfiguration = configuration;
+  }
+
+  @override
+  Future<bool> popRoute() async {
+    final curr = _currentConfiguration;
+    return (await super.popRoute()).also((it) {
+      if (it && curr is Instak4uRouteEventDetails) {
+        GetIt.I.popScope();
+      }
+    });
   }
 }
 

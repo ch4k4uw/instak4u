@@ -35,3 +35,15 @@ extension ObjectOrElse<T> on T? {
 extension ObjectSynchronousFuture<T> on T {
   SynchronousFuture<T> get asSynchronousFuture => SynchronousFuture(this);
 }
+
+extension ObjectToDouble<T> on T? {
+  double doubleOrThrow() => let((it) {
+    if (it == null) {
+      throw Exception("must not be null");
+    }
+    if (it is int) {
+      return it.toDouble();
+    }
+    return it as double;
+  });
+}

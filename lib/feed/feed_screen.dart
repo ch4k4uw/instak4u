@@ -9,7 +9,6 @@ import 'package:presenter/common.dart';
 import 'package:presenter/feed.dart';
 
 class FeedScreen extends StatefulWidget {
-  final bool asPreview;
   final FeedViewModel? viewModel;
   final UserView? userView;
   final Function(EventDetailsView)? onShowEventDetails;
@@ -23,18 +22,7 @@ class FeedScreen extends StatefulWidget {
     this.onShowEventDetails,
     this.onLoggedOut,
     this.onNavigateBack,
-  })  : asPreview = false,
-        super(key: key);
-
-  const FeedScreen.preview({
-    Key? key,
-  })  : viewModel = null,
-        userView = null,
-        onShowEventDetails = null,
-        onLoggedOut = null,
-        onNavigateBack = null,
-        asPreview = true,
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<FeedScreen> createState() => _FeedScreenState();

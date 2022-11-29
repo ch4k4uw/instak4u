@@ -14,7 +14,8 @@ export 'src/common/extensions/object_extensions.dart'
         ObjectTakeIf,
         ObjectOrThrow,
         ObjectOrElse,
-        ObjectSynchronousFuture;
+        ObjectSynchronousFuture,
+        ObjectToDouble;
 
 export 'src/common/extensions/byte_data_extensions.dart'
     show ByteDataExtensions;

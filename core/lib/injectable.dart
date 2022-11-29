@@ -1,1 +1,1 @@
-export 'src/injectable.dart' show configureCoreDependencies;
+export 'src/injectable.dart' show configureCoreDependencies, injectBuildContext;

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:presenter/common.dart';
 import 'package:presenter/src/common/interaction/user_view.dart';
+import '../../feed.dart';
 import '../common/uc/find_logged_user.dart';
 import 'package:presenter/src/splash/splash_screen_view_model_params.dart';
 
@@ -13,6 +14,7 @@ abstract class SplashScreenViewModel extends AppViewModel<SplashScreenState> {
     FutureRunner? futureRunner,
     required SplashScreenViewModelParams params,
     required FindLoggedUser findLoggedUser,
+    required FindEventDetails findEventDetails,
   }) = SplashScreenViewModelImpl;
 }
 
@@ -21,12 +23,15 @@ class SplashScreenViewModelImpl extends AppBaseViewModel<SplashScreenState>
     implements SplashScreenViewModel {
   final SplashScreenViewModelParams params;
   final FindLoggedUser _findLoggedUser;
+  final FindEventDetails _findEventDetails;
 
   SplashScreenViewModelImpl({
     FutureRunner? futureRunner,
     @factoryParam required this.params,
     required FindLoggedUser findLoggedUser,
+    required FindEventDetails findEventDetails,
   })  : _findLoggedUser = findLoggedUser,
+        _findEventDetails = findEventDetails,
         super(futureRunner: futureRunner) {
     runFuture(() async {
       send(await _init());
@@ -40,7 +45,6 @@ class SplashScreenViewModelImpl extends AppBaseViewModel<SplashScreenState>
         final eventDetailId = params.eventDetailId;
         if (eventDetailId != null) {
           final eventDetails = await _findDetails(
-            user: user,
             eventDetailId: eventDetailId,
           );
           if (eventDetails == EventDetailsView.empty) {
@@ -68,9 +72,9 @@ class SplashScreenViewModelImpl extends AppBaseViewModel<SplashScreenState>
   }
 
   Future<EventDetailsView> _findDetails({
-    required UserView user,
     required String eventDetailId,
   }) async {
-    return EventDetailsView.empty;
+    final event = await _findEventDetails(id: eventDetailId);
+    return event.asEventDetailsView;
   }
 }

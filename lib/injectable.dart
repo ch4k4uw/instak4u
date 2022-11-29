@@ -6,13 +6,12 @@ import 'package:instak4u/injectable.config.dart';
 import 'package:presenter/injectable.dart';
 
 @InjectableInit()
-void configureDependencies({required BuildContext context}) {
+void configureDependencies() {
+  const envFilter = NoEnvOrContainsAny({});
   configureCoreDependencies(
     GetIt.I,
-    context,
-    () {
-      configurePresenterDependencies(GetIt.I);
-      $initGetIt(GetIt.I);
-    },
+    envFilter,
   );
+  configurePresenterDependencies(GetIt.I, envFilter);
+  $initGetIt(GetIt.I, environmentFilter: envFilter);
 }

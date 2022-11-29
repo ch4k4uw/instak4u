@@ -48,7 +48,7 @@ extension _MapToEvent on Map<String, dynamic> {
         id: (this["id"] as Object).orThrow(),
         title: (this["title"] as Object).orThrow(),
         description: (this["description"] as Object).orThrow(),
-        price: (this["price"] as Object).orThrow(),
+        price: (this["price"] as Object).doubleOrThrow(),
         date: DateTime.fromMillisecondsSinceEpoch(
           (this["date"] as int).orThrow(),
         ),

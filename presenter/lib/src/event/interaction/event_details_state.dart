@@ -1,11 +1,11 @@
 import '../../common/interaction/event_details_view.dart';
 
 abstract class EventDetailsState {
-  static const EventDetailsState loading = _ConstState();
-  static const EventDetailsState successfulCheckedIn = _ConstState();
-  static const EventDetailsState successfulLoggedOut = _ConstState();
-  static const EventDetailsState notCheckedIn = _ConstState();
-  static const EventDetailsState eventNotShared = _ConstState();
+  static final EventDetailsState loading = _ConstState();
+  static final EventDetailsState successfulCheckedIn = _ConstState();
+  static final EventDetailsState successfulLoggedOut = _ConstState();
+  static final EventDetailsState notCheckedIn = _ConstState();
+  static final EventDetailsState eventNotShared = _ConstState();
   const EventDetailsState();
   bool get isError {
     return this == notCheckedIn || this == eventNotShared;
@@ -13,7 +13,7 @@ abstract class EventDetailsState {
 }
 
 class _ConstState extends EventDetailsState {
-  const _ConstState();
+  _ConstState();
 }
 
 class EventDetailsStateDisplayDetails extends EventDetailsState {

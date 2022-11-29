@@ -5,7 +5,10 @@ import 'package:injectable/injectable.dart';
 import 'injectable.config.dart';
 
 @InjectableInit(initializerName: r'$initPresenterGetIt')
-void configurePresenterDependencies(GetIt getIt) {
-  configureDomainDependencies(getIt);
-  $initPresenterGetIt(getIt);
+void configurePresenterDependencies(
+  GetIt getIt,
+  EnvironmentFilter environmentFilter,
+) {
+  configureDomainDependencies(getIt, environmentFilter);
+  $initPresenterGetIt(getIt, environmentFilter: environmentFilter);
 }

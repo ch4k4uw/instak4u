@@ -167,7 +167,6 @@ class _LargeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
     return Stack(
       key: const ValueKey(1),
       children: [
@@ -399,7 +398,7 @@ class _NormalScreen extends StatelessWidget {
                   opacity: normalTransition.titleTransition,
                   child: buildTitle(isStyled: true),
                 ),
-                background: AppRemoteImage(url: image),
+                background: AppRemoteImage(key: ValueKey(image), url: image),
               ),
             ),
             EventDetailsScreenEventDetails(

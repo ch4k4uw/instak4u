@@ -4,4 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'injectable.config.dart';
 
 @InjectableInit(initializerName: r'$initDomainGetIt')
-void configureDomainDependencies(GetIt getIt) => $initDomainGetIt(getIt);
+void configureDomainDependencies(
+  GetIt getIt,
+  EnvironmentFilter environmentFilter,
+) =>
+    $initDomainGetIt(getIt, environmentFilter: environmentFilter);

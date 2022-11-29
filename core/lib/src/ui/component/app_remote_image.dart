@@ -29,6 +29,7 @@ class _AppRemoteImageState extends State<AppRemoteImage> {
             color: iconColor,
           ),
         );
+    print("...\n\n\n${widget.url}\n\n\n...");
     return Stack(
       children: [
         Center(
@@ -54,10 +55,12 @@ class _AppRemoteImageState extends State<AppRemoteImage> {
           width: double.maxFinite,
           height: double.maxFinite,
           imageErrorBuilder: (context, obj, stackTrace) {
-            scheduleMicrotask(() {
-              setState(() => _isShowPlaceholder = false);
-            });
-            _log(obj, stackTrace);
+            if (_isShowPlaceholder) {
+              scheduleMicrotask(() {
+                setState(() => _isShowPlaceholder = false);
+              });
+              _log(obj, stackTrace);
+            }
             return imageError();
           },
           image: Uri.decodeFull(widget.url),
@@ -68,8 +71,8 @@ class _AppRemoteImageState extends State<AppRemoteImage> {
 
   void _log(Object obj, StackTrace? stackTrace) {
     if (kDebugMode) {
-      //print(obj);
-      //print(stackTrace);
+      print(obj);
+      print(stackTrace);
     }
   }
 }
