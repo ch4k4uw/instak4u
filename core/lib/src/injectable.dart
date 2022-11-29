@@ -1,18 +1,19 @@
-import './common/provider.dart';
 import 'package:flutter/material.dart';
-
-import './injectable.config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
+import '../common.dart';
+import './injectable.config.dart';
 import 'build_context_provider.dart';
 
 @InjectableInit(initializerName: r'$initCoreGetIt')
 void configureCoreDependencies(
   GetIt getIt,
-  BuildContext context,
-  void Function() next,
-) {
+  EnvironmentFilter environmentFilter,
+) =>
+    $initCoreGetIt(getIt, environmentFilter: environmentFilter);
+
+void injectBuildContext({required BuildContext context}) {
   if (!GetIt.I.isRegistered(instance: context)) {
     final provider = BuildContextProvider(context: context);
     GetIt.I.registerSingleton<BuildContext>(provider.context);
@@ -27,6 +28,4 @@ void configureCoreDependencies(
     }
     return;
   }
-  $initCoreGetIt(getIt);
-  next();
 }

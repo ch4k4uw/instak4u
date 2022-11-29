@@ -12,7 +12,8 @@ extension EventDetailsViewMarshalling on EventDetailsView {
     packer.packString(title);
     packer.packString(description);
     packer.packDouble(price);
-    packer.packInt(date.microsecondsSinceEpoch);
+    packer.packInt(date.microsecondsSinceEpoch >> 32);
+    packer.packInt(date.microsecondsSinceEpoch & 0xffffffff);
     packer.packString(image);
     packer.packDouble(latitude);
     packer.packDouble(longitude);
@@ -29,8 +30,13 @@ extension StringToEventDetailsView on String {
     final title = unPacker.unpackString();
     final description = unPacker.unpackString();
     final price = unPacker.unpackDouble();
-    final DateTime? date = unPacker.unpackInt()?.let((it) {
-      return DateTime.fromMicrosecondsSinceEpoch(it, isUtc: true);
+    final DateTime? date = unPacker.let((_) {
+      final h = unPacker.unpackInt()?.let((it) => it << 32);
+      final l = unPacker.unpackInt();
+      if (h != null && l != null) {
+        return DateTime.fromMicrosecondsSinceEpoch(h | l, isUtc: true);
+      }
+      return null;
     });
     final image = unPacker.unpackString();
     final lat = unPacker.unpackDouble();

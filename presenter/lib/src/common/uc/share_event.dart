@@ -1,3 +1,3 @@
 abstract class ShareEvent {
-  Future<void> call({required String eventId});
+  Future<String> call({required String eventId});
 }

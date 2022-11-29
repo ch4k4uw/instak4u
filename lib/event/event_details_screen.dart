@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:core/common.dart';
 import 'package:core/ui.dart';
 import 'package:flutter/foundation.dart';
@@ -12,75 +14,25 @@ import 'package:presenter/event.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/js.dart' as js;
 
-import 'event_details_preview_screen.dart';
-
-class EventDetailsScreen extends StatelessWidget {
-  final bool asPreview;
-
-  const EventDetailsScreen({Key? key})
-      : asPreview = false,
-        super(key: key);
-
-  const EventDetailsScreen.preview({Key? key})
-      : asPreview = true,
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.appTheme;
-    return Material(
-      color: theme.colors.colorScheme.background,
-      child: SafeArea(child: asPreview ? _preview() : _screen()),
-    );
-  }
-
-  Widget _preview() {
-    return EventDetailsPreviewScreen(builder: (user, event) {
-      return _EventDetailsScreen(
-        state: Stream.value(
-          _EventDetailsStateStateChangeState(
-            newState: EventDetailsStateDisplayDetails(eventDetails: event),
-          ),
-        ),
-        userView: user,
-        onIntent: (intent) {
-          if (intent == _EventDetailsIntent.shareEvent) {
-            debugPrint("sharing");
-          } else if (intent == _EventDetailsIntent.performCheckIn) {
-            debugPrint("check-in");
-          } else if (intent == _EventDetailsIntent.logout) {
-            debugPrint("logout");
-          }
-        },
-      );
-    });
-  }
-
-  Widget _screen() {
-    return _EventDetailsScreen();
-  }
-}
-
-class _EventDetailsScreen extends StatefulWidget {
-  final Stream<_EventDetailsStateState> state;
-  final UserView userView;
+class EventDetailsScreen extends StatefulWidget {
+  final EventDetailsViewModel? viewModel;
+  final UserView? userView;
   final void Function()? onLoggedOut;
   final void Function()? onNavigateBack;
-  final void Function(_EventDetailsIntent)? onIntent;
 
-  _EventDetailsScreen({
+  const EventDetailsScreen({
     Key? key,
-    Stream<_EventDetailsStateState>? state,
-    this.userView = UserView.empty,
+    this.viewModel,
+    this.userView,
     this.onLoggedOut,
     this.onNavigateBack,
-    this.onIntent,
-  })  : state = state ?? Stream.value(_EventDetailsStateState.idle),
-        super(key: key);
+  }) : super(key: key);
 
   @override
-  State<_EventDetailsScreen> createState() => _EventDetailsScreenState();
+  State<StatefulWidget> createState() => _EventDetailsScreenState();
 }
+
+final _idle = Stream.value(_EventDetailsStateState.idle);
 
 abstract class _EventDetailsStateState {
   static const _EventDetailsStateState idle = _ConstStateState();
@@ -96,16 +48,38 @@ class _EventDetailsStateStateChangeState implements _EventDetailsStateState {
   const _EventDetailsStateStateChangeState({required this.newState});
 }
 
-abstract class _EventDetailsIntent {
-  static final _EventDetailsIntent performCheckIn = _ConstIntent();
-  static final _EventDetailsIntent shareEvent = _ConstIntent();
-  static final _EventDetailsIntent logout = _ConstIntent();
-}
-
-class _ConstIntent implements _EventDetailsIntent {}
-
-class _EventDetailsScreenState extends State<_EventDetailsScreen> {
+class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late EventDetailsScreenState _screenState;
+  late StreamController<_EventDetailsStateState>? _streamController;
+
+  Stream<_EventDetailsStateState> get state =>
+      _streamController?.stream ?? _idle;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.appTheme;
+    return Material(
+      color: theme.colors.colorScheme.background,
+      child: SafeArea(child: _showScreen()),
+    );
+  }
+
+  Widget _showScreen() {
+    return AppContentLoadingProgressBar(
+      showProgress: _screenState.showProgress,
+      child: EventDetailsScreenContent(
+        image: _screenState.details.image,
+        title: _screenState.details.title,
+        description: _screenState.details.description,
+        userView: widget.userView.orEmpty(),
+        onLogout: _performLogout,
+        onNavigateBack: widget.onNavigateBack,
+        onPerformCheckIn: _performCheckIn,
+        onShare: _performSharing,
+        onShowMap: _showMap,
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -113,19 +87,24 @@ class _EventDetailsScreenState extends State<_EventDetailsScreen> {
     AppThemeController.of(context)?.resetSystemUiOverlayStyle(
       updateSystemChrome: true,
     );
-    widget.state.listen((event) {
-      if (event is _EventDetailsStateStateChangeState) {
-        setState(() {
-          _screenState.handleState(state: event.newState);
-        });
-      }
-    });
+    _setupState();
+    _setupListeners();
+  }
+
+  void _setupState() {
     _screenState = EventDetailsScreenState(
       onLoggedOut: widget.onLoggedOut,
       onShareEvent: _onShareEvent,
       onSuccessfulCheckedIn: _onSuccessfulCheckedIn,
       onError: _onError,
     );
+    _streamController = widget.viewModel?.let((it) {
+      final result = StreamController<_EventDetailsStateState>();
+      it.uiState.listen((event) {
+        result.add(_EventDetailsStateStateChangeState(newState: event));
+      });
+      return result;
+    });
   }
 
   void _onShareEvent(String text) {
@@ -145,45 +124,35 @@ class _EventDetailsScreenState extends State<_EventDetailsScreen> {
 
   void _onError(EventDetailsState state) {
     context.showModalGenericErrorBottomSheet(onPositiveClick: () {
-      final _EventDetailsIntent intent = state.let((it) {
-        if (it == EventDetailsState.notCheckedIn) {
-          return _EventDetailsIntent.performCheckIn;
-        }
-        return _EventDetailsIntent.shareEvent;
-      });
-      widget.onIntent?.call(intent);
+      if (state == EventDetailsState.notCheckedIn) {
+        _performCheckIn();
+      } else {
+        _performSharing();
+      }
       return true;
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return AppContentLoadingProgressBar(
-      showProgress: _screenState.showProgress,
-      child: EventDetailsScreenContent(
-        image: _screenState.details.image,
-        title: _screenState.details.title,
-        description: _screenState.details.description,
-        userView: widget.userView,
-        onLogout: _performLogout,
-        onNavigateBack: widget.onNavigateBack,
-        onPerformCheckIn: _performCheckIn,
-        onShare: _performSharing,
-        onShowMap: _showMap,
-      ),
-    );
+  void _setupListeners() {
+    state.listen((event) {
+      if (event is _EventDetailsStateStateChangeState) {
+        setState(() {
+          _screenState.handleState(state: event.newState);
+        });
+      }
+    });
   }
 
   void _performLogout() {
-    widget.onIntent?.call(_EventDetailsIntent.logout);
+    widget.viewModel?.logout();
   }
 
   void _performCheckIn() {
-    widget.onIntent?.call(_EventDetailsIntent.performCheckIn);
+    widget.viewModel?.performCheckIn();
   }
 
   void _performSharing() {
-    widget.onIntent?.call(_EventDetailsIntent.shareEvent);
+    widget.viewModel?.shareEvent();
   }
 
   void _showMap() {

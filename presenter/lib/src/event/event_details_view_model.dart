@@ -33,7 +33,7 @@ class EventDetailsViewModelImpl extends AppBaseViewModel<EventDetailsState>
 
   EventDetailsViewModelImpl({
     FutureRunner? futureRunner,
-    required EventDetailsView eventDetails,
+    @factoryParam required EventDetailsView eventDetails,
     required PerformCheckIn performCheckIn,
     required ShareEvent shareEvent,
     required PerformLogout performLogout,
@@ -64,7 +64,8 @@ class EventDetailsViewModelImpl extends AppBaseViewModel<EventDetailsState>
     runFutureOrCatch(
       () async {
         send(EventDetailsState.loading);
-        await _shareEvent(eventId: _eventDetails.id);
+        final event = await _shareEvent(eventId: _eventDetails.id);
+        send(EventDetailsStateShareEvent(text: event));
       },
       () async => send(EventDetailsState.eventNotShared),
     );

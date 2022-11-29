@@ -1,5 +1,5 @@
 export 'src/common/interaction/event_details_view.dart'
-    show EventDetailsView, EventExtension;
+    show EventDetailsView, EventExtension, NullableEventDetailsExtension;
 export 'src/common/extensions/event_details_extensions.dart'
     show EventDetailsViewMarshalling, StringToEventDetailsView;
 export 'src/common/extensions/user_view_extensions.dart'

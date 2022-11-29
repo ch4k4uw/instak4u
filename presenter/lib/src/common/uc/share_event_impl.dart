@@ -8,21 +8,21 @@ import 'share_event.dart';
 
 @Injectable(as: ShareEvent)
 class ShareEventImpl implements ShareEvent {
-  final Provider<BuildContext> _context;
+  final BuildContext _context;
   final EventRepository _eventRepository;
 
   static const _maxTextLength = 512;
 
   ShareEventImpl({
-    required Provider<BuildContext> context,
+    required BuildContext context,
     required EventRepository eventRepository,
   })  : _context = context,
         _eventRepository = eventRepository;
 
   @override
-  Future<void> call({required String eventId}) async {
+  Future<String> call({required String eventId}) async {
     final details = await _eventRepository.find(id: eventId);
-    final context = _context.value;
+    final context = _context;
     final strings = context.presenterString;
     final deepLink = {
       'scheme': strings.deepLinkHttpsScheme,
@@ -36,7 +36,7 @@ class ShareEventImpl implements ShareEvent {
       queryParameters: {'eventId': eventId},
     );
 
-    _context.value.presenterString.eventSharing(
+    return _context.presenterString.eventSharing(
       details.title,
       details.description.let((it) {
         if (it.length > _maxTextLength) {

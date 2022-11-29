@@ -74,3 +74,7 @@ extension EventExtension on Event {
         longitude: longitude,
       );
 }
+
+extension NullableEventDetailsExtension on EventDetailsView? {
+  EventDetailsView orEmpty() => this ?? const EventDetailsView();
+}
