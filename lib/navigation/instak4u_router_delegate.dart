@@ -55,7 +55,6 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
                   );
                 },
                 onShowEventDetails: (user, event) {
-                  print("\n\n\nokokok\n\n\n");
                   _replacePath(
                     context: context,
                     newPath: Instak4uRouteEventDetails(

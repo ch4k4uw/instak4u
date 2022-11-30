@@ -23,13 +23,6 @@ class _AppRemoteImageState extends State<AppRemoteImage> {
     final iconColor = theme.colors.colorScheme.onSurface.withOpacity(
       theme.doubles.defaultOpacity,
     );
-    Widget imageError() => Center(
-          child: Icon(
-            Icons.broken_image,
-            color: iconColor,
-          ),
-        );
-    print("...\n\n\n${widget.url}\n\n\n...");
     return Stack(
       children: [
         Center(
@@ -61,7 +54,12 @@ class _AppRemoteImageState extends State<AppRemoteImage> {
               });
               _log(obj, stackTrace);
             }
-            return imageError();
+            return Center(
+              child: Icon(
+                Icons.broken_image,
+                color: iconColor,
+              ),
+            );
           },
           image: Uri.decodeFull(widget.url),
         )
