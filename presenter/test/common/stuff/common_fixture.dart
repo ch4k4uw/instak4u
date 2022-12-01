@@ -7,6 +7,8 @@ import 'package:presenter/src/common/interaction/user_view.dart';
 import '../extensions/map.dart';
 
 class CommonFixture {
+  const CommonFixture._();
+
   static Domain domain = _domain;
   static Presenter presenter = _presenter;
 }
