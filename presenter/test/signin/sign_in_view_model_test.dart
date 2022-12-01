@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:core/common.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -7,7 +7,7 @@ import 'package:presenter/src/common/uc/find_logged_user.dart';
 import 'package:presenter/src/sign_in/uc/perform_sign_in.dart';
 
 import '../common/extensions/find_logged_user_extensions.dart';
-import '../common/extensions/perform_sign_in_extensions.dart';
+import '../common/extensions/global_extensions.dart';
 import '../common/extensions/zone_extensions.dart';
 import '../common/stuff/common_fixture.dart';
 import '../ui_state_observer.dart';
@@ -18,10 +18,10 @@ import '../unawaited_future_runner.dart';
 import 'sign_in_view_model_test.mocks.dart';
 
 void main() {
+  final uiStateObserver = MockUiStateObserver();
+  final futureRunner = UnawaitedFutureRunner();
   final findLoggedUser = MockFindLoggedUser();
   final performSignIn = MockPerformSignIn();
-  final futureRunner = UnawaitedFutureRunner();
-  final uiStateObserver = MockUiStateObserver();
 
   late SignInViewModel vm;
 
@@ -30,10 +30,9 @@ void main() {
       futureRunner: futureRunner,
       findLoggedUser: findLoggedUser,
       performSignIn: performSignIn,
-    );
-    vm.uiState.listen(uiStateObserver);
+    )..uiState.listen(uiStateObserver);
 
-    _disableLog();
+    disableLog();
   });
 
   group('sign-in', () {
@@ -110,6 +109,17 @@ void main() {
   });
 }
 
-void _disableLog() {
-  debugPrint = (String? message, {int? wrapWidth}) {};
+extension SignInVMMockPerformSignInExtensions on MockPerformSignIn {
+  void setup({Exception? exception}) {
+    when(
+      this(email: anyNamed("email"), password: anyNamed("password")),
+    ).thenAnswer(
+      (realInvocation) {
+        if (exception != null) {
+          return Future.error(exception, StackTrace.current);
+        }
+        return CommonFixture.domain.user.asSynchronousFuture;
+      },
+    );
+  }
 }
