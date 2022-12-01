@@ -1,4 +1,6 @@
 class PasswordHashingFixture {
+  const PasswordHashingFixture._();
+
   static const password1 = "";
   static const password2 = "";
   static const password3 = "";

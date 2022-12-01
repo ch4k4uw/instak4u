@@ -18,6 +18,29 @@ class EventHeadView {
     required this.lat,
     required this.long,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EventHeadView &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          title == other.title &&
+          date == other.date &&
+          price == other.price &&
+          image == other.image &&
+          lat == other.lat &&
+          long == other.long;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      title.hashCode ^
+      date.hashCode ^
+      price.hashCode ^
+      image.hashCode ^
+      lat.hashCode ^
+      long.hashCode;
 }
 
 extension EventsExtensions on List<Event> {

@@ -46,9 +46,6 @@ class FeedViewModelImpl extends AppBaseViewModel<FeedState>
       () async {
         send(FeedState.loading);
         final events = await _findAllEvents();
-        for (var element in events) {
-          print(element.image);
-        }
         send(
           FeedStateFeedSuccessfulLoaded(eventHeads: events.asEventHeadViews),
         );

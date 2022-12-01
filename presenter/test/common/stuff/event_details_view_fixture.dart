@@ -1,6 +1,8 @@
 import 'package:presenter/common.dart';
 
 class EventDetailsViewFixture {
+  const EventDetailsViewFixture._();
+
   static const eventDetails = EventDetailsView(
     id: "xxx",
     title: "Feira de adoção de animais na Redenção",

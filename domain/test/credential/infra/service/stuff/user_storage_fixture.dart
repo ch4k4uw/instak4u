@@ -1,6 +1,8 @@
 import 'package:domain/src/credential/domain/entity/user.dart';
 
 class UserStorageFixture {
+  const UserStorageFixture._();
+
   static const user1 = MapEntry(
     User(
       id: "a1",
