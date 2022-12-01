@@ -1,10 +1,22 @@
+import 'dart:async';
+
 abstract class FutureRunner {
-  void runFuture(Future Function() action);
   factory FutureRunner.sequential() = _SeqFutureRunner;
+
   factory FutureRunner.nonSequential() = _NonSeqFutureRunner;
+
+  void runFuture(Future Function() action);
+
+  StreamController<T> createStreamController<T>();
 }
 
-class _SeqFutureRunner implements FutureRunner {
+class _StreamControllerFutureRunner {
+  StreamController<T> createStreamController<T>() => StreamController<T>();
+}
+
+class _SeqFutureRunner
+    with _StreamControllerFutureRunner
+    implements FutureRunner {
   final List<Future Function()> _futureQueue = List.empty(growable: true);
 
   @override
@@ -25,7 +37,9 @@ class _SeqFutureRunner implements FutureRunner {
   }
 }
 
-class _NonSeqFutureRunner implements FutureRunner {
+class _NonSeqFutureRunner
+    with _StreamControllerFutureRunner
+    implements FutureRunner {
   @override
   void runFuture(Future Function() action) {
     action();

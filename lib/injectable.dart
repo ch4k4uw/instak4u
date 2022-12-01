@@ -1,5 +1,4 @@
 import 'package:core/injectable.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:instak4u/injectable.config.dart';
@@ -13,5 +12,5 @@ void configureDependencies() {
     envFilter,
   );
   configurePresenterDependencies(GetIt.I, envFilter);
-  $initGetIt(GetIt.I, environmentFilter: envFilter);
+  GetIt.I.init(environmentFilter: envFilter);
 }

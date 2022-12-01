@@ -6,6 +6,7 @@ import './future_runner.dart';
 
 abstract class AppViewModel<T> {
   Stream<T> get uiState;
+
   Future close();
 }
 
@@ -14,7 +15,8 @@ abstract class AppBaseViewModel<T> implements AppViewModel<T> {
   final FutureRunner _futureRunner;
 
   AppBaseViewModel({FutureRunner? futureRunner})
-      : _uiState = StreamController<T>(),
+      : _uiState =
+            futureRunner?.createStreamController() ?? StreamController<T>(),
         _futureRunner = futureRunner ?? FutureRunner.sequential();
 
   @override

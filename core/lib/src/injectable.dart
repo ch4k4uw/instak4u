@@ -11,7 +11,7 @@ void configureCoreDependencies(
   GetIt getIt,
   EnvironmentFilter environmentFilter,
 ) =>
-    $initCoreGetIt(getIt, environmentFilter: environmentFilter);
+    getIt.$initCoreGetIt(environmentFilter: environmentFilter);
 
 void injectBuildContext({required BuildContext context}) {
   if (!GetIt.I.isRegistered(instance: context)) {
@@ -26,6 +26,5 @@ void injectBuildContext({required BuildContext context}) {
       currContext.context = context;
       GetIt.I.registerSingleton<BuildContext>(currContext.context);
     }
-    return;
   }
 }
