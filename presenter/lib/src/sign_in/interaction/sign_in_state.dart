@@ -14,10 +14,30 @@ class SignInStateUserAlreadyLoggedIn extends SignInState {
   final UserView user;
 
   const SignInStateUserAlreadyLoggedIn({required this.user});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SignInStateUserAlreadyLoggedIn &&
+          runtimeType == other.runtimeType &&
+          user == other.user;
+
+  @override
+  int get hashCode => user.hashCode;
 }
 
 class SignInStateUserSuccessfulSignedIn extends SignInState {
   final UserView user;
 
   const SignInStateUserSuccessfulSignedIn({required this.user});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SignInStateUserSuccessfulSignedIn &&
+          runtimeType == other.runtimeType &&
+          user == other.user;
+
+  @override
+  int get hashCode => user.hashCode;
 }

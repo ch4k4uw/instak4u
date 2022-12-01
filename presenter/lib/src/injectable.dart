@@ -10,5 +10,5 @@ void configurePresenterDependencies(
   EnvironmentFilter environmentFilter,
 ) {
   configureDomainDependencies(getIt, environmentFilter);
-  $initPresenterGetIt(getIt, environmentFilter: environmentFilter);
+  getIt.$initPresenterGetIt(environmentFilter: environmentFilter);
 }

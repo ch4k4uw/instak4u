@@ -16,7 +16,7 @@ dependencies:
   presenter:
     path: presenter
   provider: 6.0.4
-  injectable: ^1.5.4
+  injectable: ^2.1.0
   get_it: ^7.2.0
   transparent_image: ^2.0.0
   cupertino_icons: 1.0.5

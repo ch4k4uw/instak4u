@@ -8,4 +8,4 @@ void configureDomainDependencies(
   GetIt getIt,
   EnvironmentFilter environmentFilter,
 ) =>
-    $initDomainGetIt(getIt, environmentFilter: environmentFilter);
+    getIt.$initDomainGetIt(environmentFilter: environmentFilter);
