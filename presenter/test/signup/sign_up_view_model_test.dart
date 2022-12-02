@@ -12,8 +12,10 @@ import '../common/extensions/zone_extensions.dart';
 import '../common/stuff/common_fixture.dart';
 import '../ui_state_observer.dart';
 import '../unawaited_future_runner.dart';
-@GenerateNiceMocks([MockSpec<PerformSignUp>()])
-@GenerateNiceMocks([MockSpec<UiStateObserver<SignUpState>>()])
+@GenerateNiceMocks([
+  MockSpec<PerformSignUp>(),
+  MockSpec<UiStateObserver<SignUpState>>(),
+])
 import 'sign_up_view_model_test.mocks.dart';
 
 final SignUpStateUserNotSignedUp emptyError = SignUpStateUserNotSignedUp(

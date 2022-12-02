@@ -12,9 +12,11 @@ import '../common/extensions/zone_extensions.dart';
 import '../common/stuff/common_fixture.dart';
 import '../ui_state_observer.dart';
 import '../unawaited_future_runner.dart';
-@GenerateNiceMocks([MockSpec<FindLoggedUser>()])
-@GenerateNiceMocks([MockSpec<PerformSignIn>()])
-@GenerateNiceMocks([MockSpec<UiStateObserver<SignInState>>()])
+@GenerateNiceMocks([
+  MockSpec<FindLoggedUser>(),
+  MockSpec<PerformSignIn>(),
+  MockSpec<UiStateObserver<SignInState>>(),
+])
 import 'sign_in_view_model_test.mocks.dart';
 
 void main() {
