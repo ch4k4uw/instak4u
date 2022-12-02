@@ -88,7 +88,7 @@ class Instak4uRouteInformationParser
 
   void _print(Object obj) {
     if (kDebugMode) {
-      print(obj);
+      debugPrint(obj.toString());
     }
   }
 

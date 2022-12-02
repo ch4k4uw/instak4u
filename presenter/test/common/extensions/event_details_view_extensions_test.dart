@@ -10,9 +10,6 @@ void main() {
     const event = EventDetailsViewFixture.eventDetails;
     final encoded = event.marshall();
     final decoded = encoded.unmarshallToEventDetailsView();
-
-    debugPrint("event: $encoded");
-
     expect(decoded, equals(event));
   });
 }
