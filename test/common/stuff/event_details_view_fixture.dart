@@ -14,9 +14,10 @@ class EventDetailsViewFixture {
       "WlhcyBlIGNvbGVpcmFzIGVtIGJvbSBlc3RhZG8KICAgICAgICAtIHJhw6fDo28gKGFzIHF1Z"
       "SBtYWlzIHByZWNpc2Ftb3Mgbm8gbW9tZW50byBzw6NvIHPDqm5pb3IgZSBmaWxob3RlKQogI"
       "CAgICAgIC0gcm91cGluaGFzIAogICAgICAgIC0gY29iZXJ0YXMgCiAgICAgICAgLSByZW3Dq"
-      "WRpb3MgZGVudHJvIGRvIHByYXpvIGRlIHZhbGlkYWRlCiAgICAgICAgywAAAAAAAAAAANlOa"
-      "HR0cHM6Ly9jZG4ucGl4YWJheS5jb20vcGhvdG8vMjAxNS8wMS8wOC8xOC8zMC9lbnRyZXByZ"
-      "W5ldXItNTkzMzc4Xzk2MF83MjAuanBny8A3jkjopx3ny8BHUd5prULE";
+      "WRpb3MgZGVudHJvIGRvIHByYXpvIGRlIHZhbGlkYWRlCiAgICAgICAgywAAAAAAAAAAAADZT"
+      "mh0dHBzOi8vY2RuLnBpeGFiYXkuY29tL3Bob3RvLzIwMTUvMDEvMDgvMTgvMzAvZW50cmVwc"
+      "mVuZXVyLTU5MzM3OF85NjBfNzIwLmpwZ8vAN45I6Kcd58vAR1Heaa1CxA==";
+
   static const eventDetails = EventDetailsView(
     id: "xxx",
     title: "Feira de adoção de animais na Redenção",

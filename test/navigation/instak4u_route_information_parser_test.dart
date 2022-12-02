@@ -113,11 +113,15 @@ void main() {
         invalidEventDetailsQueryParamInformation,
       );
 
-      expect(invalidSignUpPath, isA<Instak4uRouteSignIn>());
-      expect(invalidStartingFeedPath, isA<Instak4uRouteSignIn>());
-      expect(invalidStartingEventDetailsPath, isA<Instak4uRouteSignIn>());
-      expect(invalidFeedQueryParamPath, isA<Instak4uRouteSignIn>());
-      expect(invalidEventDetailsQueryParamPath, isA<Instak4uRouteSignIn>());
+      expect(invalidSignUpPath, isA<Instak4uRouteRedirectToFeed>());
+      expect(invalidStartingFeedPath, isA<Instak4uRouteRedirectToFeed>());
+      expect(
+        invalidStartingEventDetailsPath,
+        isA<Instak4uRouteRedirectToFeed>(),
+      );
+      expect(invalidFeedQueryParamPath, isA<Instak4uRouteRedirectToFeed>());
+      expect(invalidEventDetailsQueryParamPath,
+          isA<Instak4uRouteRedirectToFeed>());
     });
   });
 }
