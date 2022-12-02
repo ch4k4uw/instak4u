@@ -12,19 +12,37 @@ abstract class EventDetailsState {
   }
 }
 
-class _ConstState extends EventDetailsState {
-  _ConstState();
-}
+class _ConstState extends EventDetailsState {}
 
 class EventDetailsStateDisplayDetails extends EventDetailsState {
   final EventDetailsView eventDetails;
 
   const EventDetailsStateDisplayDetails({required this.eventDetails});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EventDetailsStateDisplayDetails &&
+          runtimeType == other.runtimeType &&
+          eventDetails == other.eventDetails;
+
+  @override
+  int get hashCode => eventDetails.hashCode;
 }
 
 class EventDetailsStateShareEvent extends EventDetailsState {
   final String text;
 
   const EventDetailsStateShareEvent({required this.text});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EventDetailsStateShareEvent &&
+          runtimeType == other.runtimeType &&
+          text == other.text;
+
+  @override
+  int get hashCode => text.hashCode;
 }
 

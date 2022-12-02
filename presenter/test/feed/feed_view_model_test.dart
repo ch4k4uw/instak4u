@@ -1,18 +1,20 @@
 import 'package:core/common.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:presenter/common.dart';
 import 'package:presenter/src/feed/interaction/feed_state.dart';
 import 'package:presenter/src/feed/uc/find_all_events.dart';
 import 'package:presenter/src/feed/uc/find_event_details.dart';
+
 import '../common/extensions/global_extensions.dart';
 import '../ui_state_observer.dart';
-import 'package:mockito/annotations.dart';
-
 import '../unawaited_future_runner.dart';
-@GenerateNiceMocks([MockSpec<FindAllEvents>()])
-@GenerateNiceMocks([MockSpec<FindEventDetails>()])
-@GenerateNiceMocks([MockSpec<PerformLogout>()])
-@GenerateNiceMocks([MockSpec<UiStateObserver<FeedState>>()])
+@GenerateNiceMocks([
+  MockSpec<FindAllEvents>(),
+  MockSpec<FindEventDetails>(),
+  MockSpec<PerformLogout>(),
+  MockSpec<UiStateObserver<FeedState>>(),
+])
 import 'feed_view_model_test.mocks.dart';
 import 'stuff/feed_view_mode_test_container.dart';
 import 'stuff/feed_view_model_event_fetching_test_cases.dart';
