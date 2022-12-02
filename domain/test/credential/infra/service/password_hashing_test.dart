@@ -1,10 +1,16 @@
 import 'package:domain/src/credential/infra/service/password_hashing.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../global_extensions.dart';
 import 'stuff/password_hashing_fixture.dart';
 
 void main() {
   final service = PasswordHashing();
+
+  setUp(() {
+    disableLog();
+  });
 
   test('compare with different hash setup', () async {
     final currHash = await service.hash(

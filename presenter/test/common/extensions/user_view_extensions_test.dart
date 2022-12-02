@@ -10,9 +10,6 @@ void main() {
     const user = UserViewFixture.user;
     final encoded = user.marshall();
     final decoded = encoded.unmarshallToUserView();
-
-    debugPrint("user: $encoded");
-
     expect(decoded, equals(user));
   });
 }

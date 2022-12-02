@@ -3,10 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:instak4u/navigation/instak4u_route_information_parser.dart';
 import 'package:instak4u/navigation/instak4u_route_path.dart';
 
+import '../common/global_extensions.dart';
 import '../common/stuff/event_details_view_fixture.dart';
 import '../common/stuff/user_view_fixture.dart';
 
 void main() {
+  setUp(() {
+    disableLog();
+  });
   group("route information parser", () {
     test('valid routes and params', () async {
       const basePath = "htts://localhost";
