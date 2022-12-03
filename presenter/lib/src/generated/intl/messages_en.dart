@@ -20,14 +20,17 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(title, description, latitude, longitude, url) =>
+  static String m0(eventDetails) => "event/details/${eventDetails}";
+
+  static String m1(title, description, latitude, longitude, url) =>
       "*${title}*\n\n${description}\n\n\nLocation: ${latitude}, ${longitude}\nSee more: ${url}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "deepLinkAuthority": MessageLookupByLibrary.simpleMessage("social.app"),
+        "deepLinkAuthority":
+            MessageLookupByLibrary.simpleMessage("instak4u.app"),
         "deepLinkHttpsScheme": MessageLookupByLibrary.simpleMessage("https"),
-        "deepLinkMerchant": MessageLookupByLibrary.simpleMessage("instacredi"),
-        "eventSharing": m0
+        "deepLinkMerchant": m0,
+        "eventSharing": m1
       };
 }

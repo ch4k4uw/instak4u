@@ -27,13 +27,12 @@ class ShareEventImpl implements ShareEvent {
     final deepLink = {
       'scheme': strings.deepLinkHttpsScheme,
       'authority': strings.deepLinkAuthority,
-      'merchant': strings.deepLinkMerchant,
+      'merchant': strings.deepLinkMerchant(eventId),
     };
     final uri = Uri(
       scheme: deepLink['scheme'],
       host: deepLink['authority'],
       path: deepLink['merchant'],
-      queryParameters: {'eventId': eventId},
     );
 
     return _context.presenterString.eventSharing(

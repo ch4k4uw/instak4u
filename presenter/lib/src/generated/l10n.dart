@@ -60,23 +60,23 @@ class S {
     );
   }
 
-  /// `social.app`
+  /// `instak4u.app`
   String get deepLinkAuthority {
     return Intl.message(
-      'social.app',
+      'instak4u.app',
       name: 'deepLinkAuthority',
       desc: '',
       args: [],
     );
   }
 
-  /// `instacredi`
-  String get deepLinkMerchant {
+  /// `event/details/{eventDetails}`
+  String deepLinkMerchant(String eventDetails) {
     return Intl.message(
-      'instacredi',
+      'event/details/$eventDetails',
       name: 'deepLinkMerchant',
       desc: '',
-      args: [],
+      args: [eventDetails],
     );
   }
 

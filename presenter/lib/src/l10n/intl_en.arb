@@ -1,7 +1,14 @@
 {
   "deepLinkHttpsScheme": "https",
-  "deepLinkAuthority": "social.app",
-  "deepLinkMerchant": "instacredi",
+  "deepLinkAuthority": "instak4u.app",
+  "deepLinkMerchant": "event/details/{eventDetails}",
+  "@deepLinkMerchant": {
+    "placeholders": {
+      "eventDetails": {
+        "type": "String"
+      }
+    }
+  },
   "eventSharing": "*{title}*\n\n{description}\n\n\nLocation: {latitude}, {longitude}\nSee more: {url}",
   "@eventSharing": {
     "placeholders": {

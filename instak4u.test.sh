@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 flutter test -r expanded
 cd presenter
 flutter test -r expanded
