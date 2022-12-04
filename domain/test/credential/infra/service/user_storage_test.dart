@@ -1,3 +1,4 @@
+import 'package:domain/credential.dart';
 import 'package:domain/src/credential/infra/service/user_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -38,5 +39,18 @@ void main() {
     expect(3, equals((await service.findUsers()).length));
     expect(UserStorageFixture.user1.key, equals(await service.restore()));
     expect(UserStorageFixture.user1.key, equals(await service.restore()));
+  });
+
+  test('restore removed user', () async {
+    await service.store(
+      user: UserStorageFixture.user1.key,
+      password: UserStorageFixture.user1.value,
+    );
+
+    expect(UserStorageFixture.user1.key, equals(await service.restore()));
+
+    await service.remove();
+
+    expect(User.empty, equals(await service.restore()));
   });
 }

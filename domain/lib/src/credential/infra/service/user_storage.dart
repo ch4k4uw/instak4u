@@ -236,6 +236,7 @@ class _LocalStorageLocal {
         await f.setPosition(offset: 0);
         final userHeader = await f.readByteData(bufferSize: 16);
         userHeader.setUint32(4, 0);
+        await f.setPosition(offset: 0);
         await f.writeByteData(byteData: userHeader);
       });
     } catch (e, s) {
