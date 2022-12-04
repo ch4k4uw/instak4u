@@ -48,6 +48,8 @@ class Instak4uRouteRedirectToEventDetails extends Instak4uRouteRedirect {
 }
 
 extension Instak4uRoutePathExtension on Instak4uRoutePath {
+  bool get isSplashRoutePath => this is Instak4uRouteRedirect;
+
   bool get isFeedRoutePath => this is Instak4uRouteFeed;
 
   bool get isEventDetailsRoutePath => this is Instak4uRouteEventDetails;
@@ -78,6 +80,8 @@ extension Instak4uRoutePathExtension on Instak4uRoutePath {
 }
 
 extension Instak4uRoutePathNullableExtension on Instak4uRoutePath? {
+  bool get isSplashRoutePath => this?.isSplashRoutePath == true;
+
   bool get isFeedRoutePath => this?.isFeedRoutePath == true;
 
   bool get isEventDetailsRoutePath => this?.isEventDetailsRoutePath == true;

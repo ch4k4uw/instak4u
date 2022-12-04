@@ -108,9 +108,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    AppThemeController.of(context)?.resetSystemUiOverlayStyle(
-      updateSystemChrome: true,
-    );
     _setupState();
     _setupListeners();
   }

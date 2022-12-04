@@ -1,5 +1,6 @@
 import 'package:core/common.dart';
 import 'package:core/injectable.dart';
+import 'package:core/ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,18 @@ class Instak4uRouterDelegate extends RouterDelegate<Instak4uRoutePath>
 
   @override
   Widget build(BuildContext context) {
+    final isSplashRoute = _currentConfiguration.isSplashRoutePath;
+    final isSignInRoute = _currentConfiguration.isSignInRoutePath;
+    if (isSplashRoute || isSignInRoute) {
+      AppThemeController.of(context)?.switchSystemUiOverlayToDarkStyle(
+        statusBarColor: Colors.transparent,
+        updateSystemChrome: true,
+      );
+    } else {
+      AppThemeController.of(context)?.resetSystemUiOverlayStyle(
+        updateSystemChrome: true,
+      );
+    }
     return Navigator(
       key: navigatorKey,
       pages: [

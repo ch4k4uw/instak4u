@@ -63,11 +63,6 @@ class _SplashScreenScreenState extends State<SplashScreenScreen> {
   @override
   void initState() {
     super.initState();
-    AppThemeController.of(context)?.switchSystemUiOverlayToDarkStyle(
-      statusBarColor: Colors.transparent,
-      updateSystemChrome: true,
-    );
-
     _setupState();
     _setupListeners();
   }

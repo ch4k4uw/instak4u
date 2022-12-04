@@ -84,9 +84,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    AppThemeController.of(context)?.resetSystemUiOverlayStyle(
-      updateSystemChrome: true,
-    );
     _setupState();
     _setupListeners();
   }

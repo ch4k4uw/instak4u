@@ -75,9 +75,6 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void initState() {
     super.initState();
-    AppThemeController.of(context)?.resetSystemUiOverlayStyle(
-      updateSystemChrome: true,
-    );
     _setupState();
     _setupListeners();
     if (_loadFeed) {
